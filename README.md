@@ -15,6 +15,29 @@ Found in the folders:
 
 This was required to keep create-react-app happy as it wasn't very happy being in a sub folder.
 
+## Provider Integration Requirements
+Guidelines on the integration requirements for each api/service we are using
+
+### Uber
+https://d1a3f4spazzrp4.cloudfront.net/uberex/Uber_API_Design_Guidelines_20160329.pdf
+
+### Open Table
+**Linking Requirements**
+
+https://platform.opentable.com/documentation/#linking-guidelines
+Has requirements that if you're on a mobile device you must present a link for that device's app if possible
+
+**Branding Requirements**
+
+https://platform.opentable.com/documentation/#brand-assets
+
+
+### Google Maps
+None
+
+### Google Auth
+None
+
 # API
 This is where the client will get all its data from
 Found in /api
