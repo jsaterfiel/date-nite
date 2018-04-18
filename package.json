@@ -32,5 +32,6 @@
   },
   "devDependencies": {
     "babel-preset-airbnb": "^2.4.0"
-  }
+  },
+  "proxy": "http://localhost:3000/"
 }

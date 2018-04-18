@@ -7,6 +7,29 @@ Created for CS-554
 - John Saterfiel
 - Sravanthi Kanchi
 
+# Getting Started
+You need to install docker for mac https://www.docker.com/docker-mac
+
+# Starting App
+The app is using containers now for development so you will need to use these commands to start/stop the servers.
+
+Starting the apps
+```
+docker-compose up --force-recreate
+```
+
+Cleaning up after the apps (if needed)
+```
+docker-compose down
+```
+
+Running in daemon mode if you do not want it running in a command line all the time
+```
+docker-compose up -d --force-recreate
+```
+
+More instructions and a helper script will be coming along with the rest of the containers.
+
 # Client
 This is where the javascript, css and assets are stored for the code run in the user's browser.
 Found in the folders:
@@ -35,8 +58,8 @@ https://platform.opentable.com/documentation/#brand-assets
 ### Google Maps
 None
 
-### Google Auth
-None
+### Yelp
+If we use this, we cannot cache the content from the calls (except the business ids) for longer than 24 hours.
 
 # API
 This is where the client will get all its data from

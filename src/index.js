@@ -13,6 +13,8 @@ import reducers from './store/reducers' // Or wherever you keep your reducers
 import registerServiceWorker from './registerServiceWorker'
 import Home from './routes/Home'
 import Welcome from './routes/Welcome'
+import CreateDate from './routes/CreateDate'
+import SignUp from './routes/SignUp'
 import './App.css'
 
 // Create a history of your choosing (we're using a browser history in this case)
@@ -40,6 +42,8 @@ ReactDOM.render(
       <div>
         <Route exact path='/' component={Welcome} />
         <Route exact path='/home' component={Home} />
+        <Route exact path='/sign-up' component={SignUp} />
+        <Route exact path='/create-date' component={CreateDate} />
       </div>
     </ConnectedRouter>
   </Provider>,

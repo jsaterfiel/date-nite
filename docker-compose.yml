@@ -1,0 +1,30 @@
+version: '3.6'
+services:
+  redis:
+   image: redis
+
+  client:
+   build:
+    context: .
+    dockerfile: "./docker_files/client/Dockerfile"
+   volumes:
+     - "./src:/app/src"
+     - "./public:/app/public"
+     - "./config.js:/app/config.js"
+   ports:
+     - "80:3000"
+     - "9876:9876"
+     - "35729:35729"
+   hostname: "local.datenite.com"
+
+  api:
+   build:
+    context: .
+    dockerfile: "./docker_files/api/Dockerfile"
+   depends_on:
+     - redis
+   volumes:
+     - "./api:/app/api"
+     - "./config.js:/app/config.js"
+   ports:
+     - "3000:3000"
