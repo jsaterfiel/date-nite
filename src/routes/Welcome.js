@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class Welcome extends Component {
   render () {
@@ -31,6 +32,7 @@ class Welcome extends Component {
             <nav className='nav mt-5 justify-content-end'>
               <a className='nav-link active' href='#'>About</a>
               <a className='nav-link active' href='#'>Contact Us</a>
+              <Link to="create-date">Create Date</Link>
             </nav>
           </div>
         </div>

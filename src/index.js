@@ -5,13 +5,13 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 
 import createHistory from 'history/createBrowserHistory'
-import { Route } from 'react-router'
 
 import { ConnectedRouter as Router, routerReducer, routerMiddleware } from 'react-router-redux'
 
 import reducers from './store/reducers' // Or wherever you keep your reducers
 import registerServiceWorker from './registerServiceWorker'
 
+import "bootstrap/dist/css/bootstrap.css";
 import App from './App';
 
 
