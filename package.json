@@ -10,6 +10,10 @@
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "history": "^4.7.2",
+    "jquery": "^3.3.1",
+    "node-sass-chokidar": "^1.2.2",
+    "npm-run-all": "^4.1.2",
+    "popper.js": "^1.14.3",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.7",
@@ -29,7 +33,9 @@
     "start-api": "node api/index.js",
     "start-scheduler": "node scheduler/index.js",
     "start-redis": "redis-server /etc/redis.conf",
-    "start": "npm start-redis & npm run start-worker & npm run start-server & npm run start-client"
+    "build-css": "node-sass-chokidar src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
+    "start": "npm start-redis & npm run start-worker & npm run start-server & run-p watch-css start-client"
   },
   "devDependencies": {
     "babel-preset-airbnb": "^2.4.0"

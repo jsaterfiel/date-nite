@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import jquery from 'jquery'
 
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
@@ -11,8 +12,11 @@ import { ConnectedRouter as Router, routerReducer, routerMiddleware } from 'reac
 import reducers from './store/reducers' // Or wherever you keep your reducers
 import registerServiceWorker from './registerServiceWorker'
 
-import "bootstrap/dist/css/bootstrap.css";
-import App from './App';
+import 'bootstrap/dist/css/bootstrap.css'
+import App from './App'
+
+window.jQuery = jquery;
+require('bootstrap');
 
 
 // Create a history of your choosing (we're using a browser history in this case)
