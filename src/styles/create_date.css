@@ -1,2 +1,5 @@
-.create-date-nav {
-  box-shadow: 0 1px rgba(0, 0, 0, 0.08); }
+.count-text {
+  max-width: 80px; }
+
+.custom-datepicker {
+  float: right; }
