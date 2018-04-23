@@ -30,6 +30,13 @@ docker-compose up -d --force-recreate
 
 More instructions and a helper script will be coming along with the rest of the containers.
 
+## Mongo
+Can connect to mongo with any client as long as you specifiy the home address instead of localhost (127.0.0.1) using the normal default mongo port.
+
+## Redis
+Can connect to redis via the redis-cli client.  All ports are the normal ones.
+
+
 # Client
 This is where the javascript, css and assets are stored for the code run in the user's browser.
 Found in the folders:

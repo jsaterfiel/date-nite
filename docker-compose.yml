@@ -2,6 +2,8 @@ version: '3.6'
 services:
   redis:
    image: redis
+   ports:
+     - "6379:6379"
 
   client:
    build:
@@ -28,3 +30,10 @@ services:
      - "./config.js:/app/config.js"
    ports:
      - "3000:3000"
+    
+  mongo:
+    image: mongo
+    volumes:
+      - "./data:/data/db"
+    ports:
+     - "27017:27017"
