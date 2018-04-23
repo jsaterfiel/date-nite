@@ -1,5 +1,9 @@
+.count-container {
+  width: 160px; }
+
 .count-text {
   max-width: 80px; }
 
 .custom-datepicker {
-  float: right; }
+  float: right;
+  border-radius: 0.25rem; }
