@@ -7,4 +7,15 @@
 .custom-datepicker {
     float: right;
     border-radius: 0.25rem;
+    text-align: center;
+    height: 37px;
+}
+.react-datepicker {
+    position: relative;
+    left: -50px;
+}
+.create-date-page {
+    .map-container {
+        text-align: center;
+    }
 }
