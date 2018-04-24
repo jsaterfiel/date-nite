@@ -1,0 +1,18 @@
+{
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "editor.tabSize": 2,
+  "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "editor.detectIndentation": false,
+  "workbench.startupEditor": "newUntitledFile",
+  "python.pythonPath": "/usr/local/bin/python3",
+  "window.zoomLevel": 0,
+  "files.autoSave": "afterDelay",
+  "window.openFoldersInNewWindow": "on",
+  "git.autofetch": true,
+  "javascript.validate.enable": false,
+  "explorer.confirmDragAndDrop": false,
+  "standard.enable": true,
+  "standard.usePackageJson": true,
+  "standard.run": "onType"
+}

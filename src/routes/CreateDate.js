@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import CreateDateHeader from '../components/create_date_header';
+import React, { Component } from 'react'
+import CreateDateHeader from '../components/CreateDateHeader'
 
 class CreateDate extends Component {
-    render () {
-        return (
-            <div className="create-date-page">
-                <CreateDateHeader />
-                <div className="map-container">
-                    MAP GOES HERE!
-                </div>
-            </div>
-        );
-    }
-};
+  render () {
+    return (
+      <div className='create-date-page'>
+        <CreateDateHeader />
+        <div className='map-container'>
+        MAP GOES HERE!
+        </div>
+      </div>
+    )
+  }
+}
 
-export default CreateDate;
+export default CreateDate

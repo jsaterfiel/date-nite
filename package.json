@@ -40,8 +40,12 @@
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
     "start": "npm start-redis & npm run start-worker & npm run start-server & run-p watch-css start-client"
   },
+  "standard": {
+    "parser": "babel-eslint"
+  },
   "devDependencies": {
-    "babel-preset-airbnb": "^2.4.0"
+    "babel-preset-airbnb": "^2.4.0",
+    "standard": "^11.0.1"
   },
   "proxy": "http://localhost:3000/"
 }
