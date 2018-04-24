@@ -1,21 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import jquery from 'jquery'
 
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 
 import createHistory from 'history/createBrowserHistory'
-import { Route } from 'react-router'
 
-import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux'
+import { ConnectedRouter as Router, routerReducer, routerMiddleware } from 'react-router-redux'
 
 import reducers from './store/reducers' // Or wherever you keep your reducers
 import registerServiceWorker from './registerServiceWorker'
-import Home from './routes/Home'
-import Welcome from './routes/Welcome'
-import CreateDate from './routes/CreateDate'
-import SignUp from './routes/SignUp'
-import './App.css'
+
+import 'bootstrap/dist/css/bootstrap.css'
+import App from './App'
+
+window.jQuery = jquery;
+require('bootstrap');
+
 
 // Create a history of your choosing (we're using a browser history in this case)
 const history = createHistory()
@@ -38,14 +40,9 @@ const store = createStore(
 
 ReactDOM.render(
   <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <div>
-        <Route exact path='/' component={Welcome} />
-        <Route exact path='/home' component={Home} />
-        <Route exact path='/sign-up' component={SignUp} />
-        <Route exact path='/create-date' component={CreateDate} />
-      </div>
-    </ConnectedRouter>
+    <Router history={history}>
+      <App />
+    </Router>
   </Provider>,
   document.getElementById('root')
 )
