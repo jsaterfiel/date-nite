@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Footer from '../components/Footer'
 
 class Home extends Component {
   render () {
@@ -45,14 +46,7 @@ class Home extends Component {
             </table>
           </div>
         </div>
-        <div className='row'>
-          <div className='col'>
-            <nav className='nav mt-5 justify-content-end'>
-              <a className='nav-link active' href='#'>About</a>
-              <a className='nav-link active' href='#'>Contact Us</a>
-            </nav>
-          </div>
-        </div>
+        <Footer />
       </div>
     )
   }

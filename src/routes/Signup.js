@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import uberLogo from '../providerLogos/uber_logo.png'
+import Footer from '../components/Footer'
 
 class SignUp extends Component {
   render () {
@@ -23,14 +24,7 @@ class SignUp extends Component {
             <button type='button' className='btn btn-primary'>Sign in with Uber for handling rides <img src={uberLogo} alt='Uber logo' width='70px' /></button>
           </div>
         </div>
-        <div className='row'>
-          <div className='col'>
-            <nav className='nav mt-5 justify-content-end'>
-              <a className='nav-link active' href='#'>About</a>
-              <a className='nav-link active' href='#'>Contact Us</a>
-            </nav>
-          </div>
-        </div>
+        <Footer />
       </div>
     )
   }
