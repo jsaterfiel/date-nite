@@ -1,7 +1,6 @@
 FROM mhart/alpine-node:9
 
 WORKDIR /app
-COPY ./docker_files/client/run.sh .
 COPY ./public /app/public
 COPY ./src /app/src
 COPY ./package.json /app

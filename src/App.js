@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom'
 import Home from './routes/Home'
 import Welcome from './routes/Welcome'
 import CreateDate from './routes/CreateDate'
-import SignUp from './routes/Signup'
+import SignUp from './routes/SignUp'
 
 import './App.css'
 
