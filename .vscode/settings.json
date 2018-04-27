@@ -5,7 +5,6 @@
   "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
   "editor.detectIndentation": false,
   "workbench.startupEditor": "newUntitledFile",
-  "python.pythonPath": "/usr/local/bin/python3",
   "window.zoomLevel": 0,
   "files.autoSave": "afterDelay",
   "window.openFoldersInNewWindow": "on",
