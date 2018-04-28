@@ -6,6 +6,12 @@ const app = express()
 app.use(bodyParser.json())
 app.use(express.static('output'))
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next()
+})
+
 app.get('/api', async (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   res.send(JSON.stringify({hello: 'world'}))
@@ -17,9 +23,11 @@ app.get('/api/uber-sign-up', async (req, res) => {
   // exchange for token
   // pull profile info from uber
   // write data to db
-  // set user data in redis
+  // set user data in redis with generated session key
+  // return session key to user or return error
+  console.log(req.query.accessCode)
   res.setHeader('Content-Type', 'application/json')
-  res.send(JSON.stringify({hello: 'world'}))
+  res.send(JSON.stringify({sessionId: 'testtest2'}))
 })
 
 // 404 handling

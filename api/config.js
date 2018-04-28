@@ -6,7 +6,11 @@
 const Config = {
   UberEndPoint: 'https://sandbox-api.uber.com/v2/',
   UberClientID: 'cYflhnlrqm26Jtq9qVadHRjaYBSASSIO',
-  ApiURL: 'http://localhost:3000/'
+  UberServerToken: 'c5ftRpqmpjOTJ-J-wTTClfIC1urkGomfwTqg0xNL',
+  GoogleMapsApiKey: 'AIzaSyAfXk1SUFJoDSe6I2edIAYku1RG1nHaDDQ',
+  YelpEndPointBusiness: 'https://api.yelp.com/v3/businesses/',
+  YelpClientID: 'g_HgTD0WnjJLMtoeKsYnQA',
+  YelpAPIKey: 'UjSQOTjPfi5olmGtIOrp4u97R_MuPgc--R_rKeZahyxgvtJ4Xb8nGIUpzXOByuMgG5A2vboYz83M8MXEamZ3h3Y5Cod_SPiOnYjtPPaijOmUWj96vhGjNF-NJ0bXWnYx'
 }
 
 export default Config

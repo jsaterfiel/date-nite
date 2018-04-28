@@ -2,13 +2,28 @@ import React, { Component } from 'react'
 import uberLogo from '../providerLogos/uber_logo.png'
 import Footer from '../components/Footer'
 import Config from '../config'
+import API from '../services/api'
+
+const QueryStringCodeCheck = '?code='
+const LoginURL = 'https://login.uber.com/oauth/v2/authorize?client_id=' + Config.UberClientID + '&response_type=code&scope=request'
 
 class SigningUp extends Component {
   constructor (props) {
     super(props)
-
-    this.loginURL = 'https://login.uber.com/oauth/v2/authorize?client_id=' + Config.UberClientID + '&response_type=code&scope=offline_access%20profile%20request'
+    this.state = {
+      sessionID: ''
+    }
   }
+
+  componentDidMount = async props => {
+    if (window.location.search.indexOf(QueryStringCodeCheck) === 0) {
+      const sessionID = await API.signUp(window.location.search.replace(QueryStringCodeCheck, ''))
+      this.setState({
+        sessionID: sessionID
+      })
+    }
+  }
+
   render () {
     return (
       <div className='container'>
@@ -25,9 +40,11 @@ class SigningUp extends Component {
         </div>
         <div className='row'>
           <div className='col mt-5 mb-5'>
-            {/* Use alert once a step is completed and remove the button Also can change the alert class to warning if an error occurs and show the button still */}
-            <div className='alert alert-primary' role='alert'>You've signed in with uber!</div>
-            <a href={this.loginURL} className='btn btn-primary'>Sign in with Uber for handling rides <img src={uberLogo} alt='Uber logo' width='70px' /></a>
+            {this.state.sessionID !== '' ? (
+              <div className='alert alert-primary' role='alert'>You've signed in with uber!</div>
+            ) : (
+              <a href={LoginURL} className='btn btn-primary'>Sign in with Uber for handling rides <img src={uberLogo} alt='Uber logo' width='70px' /></a>
+            )}
           </div>
         </div>
         <Footer />
