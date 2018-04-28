@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
 import uberLogo from '../providerLogos/uber_logo.png'
 import Footer from '../components/Footer'
+import Config from '../config'
 
-class SignUp extends Component {
+class SigningUp extends Component {
+  constructor (props) {
+    super(props)
+
+    this.loginURL = 'https://login.uber.com/oauth/v2/authorize?client_id=' + Config.UberClientID + '&response_type=code&scope=offline_access%20profile%20request'
+  }
   render () {
     return (
       <div className='container'>
@@ -21,7 +27,7 @@ class SignUp extends Component {
           <div className='col mt-5 mb-5'>
             {/* Use alert once a step is completed and remove the button Also can change the alert class to warning if an error occurs and show the button still */}
             <div className='alert alert-primary' role='alert'>You've signed in with uber!</div>
-            <button type='button' className='btn btn-primary'>Sign in with Uber for handling rides <img src={uberLogo} alt='Uber logo' width='70px' /></button>
+            <a href={this.loginURL} className='btn btn-primary'>Sign in with Uber for handling rides <img src={uberLogo} alt='Uber logo' width='70px' /></a>
           </div>
         </div>
         <Footer />
@@ -30,4 +36,4 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp
+export default SigningUp
