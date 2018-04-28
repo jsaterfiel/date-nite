@@ -12,7 +12,6 @@ services:
    volumes:
      - "./src:/app/src"
      - "./public:/app/public"
-     - "./config.js:/app/config.js"
    ports:
      - "80:3000"
      - "9876:9876"
@@ -25,11 +24,20 @@ services:
     dockerfile: "./docker_files/api/Dockerfile"
    depends_on:
      - redis
+     - mongo
    volumes:
      - "./api:/app/api"
-     - "./config.js:/app/config.js"
    ports:
      - "3000:3000"
+
+  scheduler:
+   build:
+    context: .
+    dockerfile: "./docker_files/scheduler/Dockerfile"
+   depends_on:
+     - mongo
+   volumes:
+     - "./scheduler:/app/scheduler"
     
   mongo:
     image: mongo

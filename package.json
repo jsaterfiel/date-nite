@@ -36,6 +36,7 @@
     "start-api": "node api/index.js",
     "watch-api": "nodemon --watch api api/index.js",
     "start-scheduler": "node scheduler/index.js",
+    "watch-scheduler": "nodemon --watch scheduler scheduler/index.js",
     "start-redis": "redis-server /etc/redis.conf",
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
