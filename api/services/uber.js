@@ -1,54 +1,74 @@
-import Axios from 'axios'
-import Validator from 'validator'
+const axios = require('axios')
+const querystring = require('querystring')
+const redis = require('redis')
+const bluebird = require('bluebird')
+const uuid = require('uuid/v4')
+const db = require('./db')
+const config = require('../config')
 
-const spotifyInstance = Axios.create()
+bluebird.promisifyAll(redis.RedisClient.prototype)
+bluebird.promisifyAll(redis.Multi.prototype)
 
-const clientId = 'e7b5f9a1562643349f56c08e079027f1'
+const uberInstance = axios.create()
+const cache = redis.createClient({url: 'redis://redis:6379'})
 
-spotifyInstance.interceptors.request.use((config) => {
-  console.log(config)
+uberInstance.interceptors.request.use((reqConfig) => {
+  if (reqConfig.url.indexOf('https://') === -1) {
+    reqConfig.url = config.UberEndPoint + reqConfig.url
+  }
   // somehow an auth header was set here? 'Authorization: Bearer oijsdfoisdofiusodifus'
-  config.url = `https://api.spotify.com/v1/${config.url}`
   let token = null
-  if (window.localStorage['token']) {
-    token = window.localStorage['token']
+  if (reqConfig.data && reqConfig.data.token) {
+    console.log('token found')
+    token = reqConfig.data.token
+    reqConfig.headers['Authorization'] = 'Bearer ' + token
   }
-  if (token) {
-    config.headers['Authorization'] = 'Bearer ' + token
-  }
-  return config
+  console.log('header', reqConfig.headers)
+  return reqConfig
 })
 
 const API = {
-  searchForSongs: async queryString => {
-    const term = Validator.escape(queryString)
-    const url = `search?q=${term}&type=track&market=US&limit=20`
+  auth: async accessCode => {
     let result = null
     try {
-      result = await spotifyInstance.get(url)
+      result = await uberInstance.post(config.UberAuthEndPoint, querystring.stringify({
+        'client_id': config.UberClientID,
+        'client_secret': config.UberClientSecret,
+        'grant_type': 'authorization_code',
+        'redirect_uri': 'http://localhost/sign-up',
+        'code': accessCode
+      }))
     } catch (e) {
-      API.auth(queryString)
+      console.log('token request', e.response.data.error)
+      return null
     }
-    return result.data.tracks.items
+    console.log('token', result.data.access_token)
+    const sessionID = uuid()
+    const token = result.data.access_token
+    // get profile
+    const profile = await API.profile(token)
+    if (profile === null) {
+      return null
+    }
+    // check if user is in mongo
+    await db.createUser(profile)
+    // store user profile in redis
+    console.log('redis key', 'session_' + sessionID)
+    await cache.setAsync('session_' + sessionID, JSON.stringify(profile), 'EX', result.data.expires_in)
+    return sessionID
   },
 
-  hasAuth: () => {
-    if (window.location.hash.indexOf('access_token') > -1) {
-      window.location.hash.substring(1).split('&').map(tmp => {
-        if (tmp.indexOf('access_token') > -1) {
-          window.localStorage['token'] = tmp.split('=')[1]
-          console.log(window.localStorage['token'])
-        }
-      })
-    } else {
-      API.auth('')
+  profile: async token => {
+    let result = null
+    try {
+      result = await uberInstance.get('me', {headers: {common: {'Authorization': 'Bearer ' + token}}})
+    } catch (e) {
+      console.log('profile request', e.response.data)
+      return null
     }
-  },
-
-  auth: (queryString) => {
-    window.localStorage['query'] = queryString
-    window.location = 'https://accounts.spotify.com/authorize?response_type=token&client_id=' + clientId + '&redirect_uri=' + encodeURIComponent('http://localhost:3000/callback')
+    console.log('profile', result.data)
+    return result.data
   }
 }
 
-export default API
+module.exports = API

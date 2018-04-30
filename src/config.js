@@ -4,7 +4,6 @@
  * Ensure that only sandbox urls are used when payment or alerting of user content occurs like in uber's case.
  */
 const Config = {
-  UberEndPoint: 'https://sandbox-api.uber.com/v2/',
   UberClientID: 'cYflhnlrqm26Jtq9qVadHRjaYBSASSIO',
   ApiURL: 'http://localhost:3000/'
 }
