@@ -3,7 +3,10 @@ import DatePicker from 'react-datepicker'
 import Moment from 'moment'
 
 import 'react-datepicker/dist/react-datepicker.css'
-import '../styles/create_date.css'
+import '../styles/create_date_header.css'
+
+const COUNT = [2, 3, 4, 5, 6, 7, 8]
+const DEFAULT_COUNT = 2
 
 class CreateDateHeader extends Component {
   constructor (props) {
@@ -11,8 +14,21 @@ class CreateDateHeader extends Component {
 
     this.state = {
       currentDate: Moment(),
-      selectedDate: null
+      selectedDate: null,
+      count: DEFAULT_COUNT
     }
+  }
+
+  countOptions = () => {
+    return COUNT.map(option => {
+      return <span key={option} onClick={() => this.onSelectCountChange(option)} className='dropdown-item'>{option}</span>
+    })
+  }
+
+  onSelectCountChange = (newCount) => {
+    this.setState({
+      count: newCount
+    })
   }
 
   onSelectDateChange = (date) => {
@@ -24,26 +40,27 @@ class CreateDateHeader extends Component {
   render () {
     return (
       <div className='create-date-header'>
-        <h1>Create A Date</h1>
-        <div className='form-group mb-3'>
-          <label for='dateCount'>How Many will be attending the date?</label>
-          <select className='form-control' id='dateCount'>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-          <label for='dateWhen'>When would you like this date to occur?</label>
+        <nav className='create-date-nav navbar navbar-dark bg-dark'>
+          <div className='input-group mb-3 count-container'>
+            <div className='input-group-prepend'>
+              <button className='btn btn-outline-info dropdown-toggle' type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Count</button>
+              <div className='dropdown-menu'>
+                {this.countOptions()}
+              </div>
+            </div>
+            <input type='text' onChange={(value) => this.setState({count: value})} value={this.state.count} className='form-control count-text' aria-label='Text input with dropdown button' />
+          </div>
           <DatePicker className='custom-datepicker' id='dateWhen'
             minDate={this.state.currentDate} selected={this.state.selectedDate}
             showTimeSelect
+            dateFormat='LLL'
             timeFormat='h:mm a'
-            timeCaption='time'
+            timeCaption='Time'
             minTime={Moment().hours(13).minutes(0)}
             maxTime={Moment().hours(23)}
             onChange={this.onSelectDateChange} placeholderText='When is your date?' />
-        </div>
-      </div>
+        </nav>
+      </div >
     )
   }
 }
