@@ -55,7 +55,7 @@ const API = {
     // store user profile in redis
     console.log('redis key', 'session_' + sessionID)
     await cache.setAsync('session_' + sessionID, JSON.stringify(profile), 'EX', result.data.expires_in)
-    return sessionID
+    return {sessionID: sessionID, expiresIn: result.data.expires_in}
   },
 
   profile: async token => {

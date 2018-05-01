@@ -34,8 +34,8 @@ app.get('/api/uber-sign-up', async (req, res) => {
   // set user data in redis with generated session key
   // return session key to user or return error
   res.setHeader('Content-Type', 'application/json')
-  const sessionID = await uberService.auth(req.query.accessCode)
-  res.send(JSON.stringify({sessionId: sessionID}))
+  const result = await uberService.auth(req.query.accessCode)
+  res.send(JSON.stringify(result))
 })
 
 // 404 handling

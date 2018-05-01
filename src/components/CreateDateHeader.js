@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import DatePicker from 'react-datepicker'
 import Moment from 'moment'
 
@@ -26,14 +27,14 @@ class CreateDateHeader extends Component {
       <div className='create-date-header'>
         <h1>Create A Date</h1>
         <div className='form-group mb-3'>
-          <label for='dateCount'>How Many will be attending the date?</label>
+          <label htmlFor='dateCount'>How Many will be attending the date?</label>
           <select className='form-control' id='dateCount'>
             <option>2</option>
             <option>3</option>
             <option>4</option>
             <option>5</option>
           </select>
-          <label for='dateWhen'>When would you like this date to occur?</label>
+          <label htmlFor='dateWhen'>When would you like this date to occur?</label>
           <DatePicker className='custom-datepicker' id='dateWhen'
             minDate={this.state.currentDate} selected={this.state.selectedDate}
             showTimeSelect
@@ -48,4 +49,7 @@ class CreateDateHeader extends Component {
   }
 }
 
-export default CreateDateHeader
+const mapStateToProps = state => {
+  return state.general
+}
+export default connect(mapStateToProps)(CreateDateHeader)

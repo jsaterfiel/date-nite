@@ -1,7 +1,16 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { push } from 'react-router-redux'
 import Footer from '../components/Footer'
 
 class Welcome extends Component {
+  componentDidMount = async props => {
+    if (this.props.sessionID !== '') {
+      this.props.goToHome()
+    }
+  }
+
   render () {
     return (
       <div className='container'>
@@ -10,7 +19,7 @@ class Welcome extends Component {
             <div className='card bg-dark text-white'>
               <img className='card-img' src='http://via.placeholder.com/932x270' alt='Date Nite App Banner' />
               <div className='card-img-overlay banner'>
-                <button type='button' className='btn btn-primary'>Sign in/Sign up with Google</button>
+                <Link to='sign-up' className='btn btn-primary'>Sign in/Sign up</Link>
               </div>
             </div>
           </div>
@@ -33,4 +42,14 @@ class Welcome extends Component {
   }
 }
 
-export default Welcome
+const mapStateToProps = state => {
+  return state.general
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    goToHome: () => {
+      dispatch(push('/home'))
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Welcome)

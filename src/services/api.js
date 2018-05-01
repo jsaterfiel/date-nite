@@ -16,7 +16,7 @@ const API = {
     } catch (e) {
       return false
     }
-    return result.sessionID
+    return result.data
   }
 }
 
