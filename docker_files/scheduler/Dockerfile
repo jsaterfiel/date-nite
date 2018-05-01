@@ -1,7 +1,7 @@
 FROM mhart/alpine-node:9
 
 WORKDIR /app
-COPY ./api /app/api
+COPY ./scheduler /app/scheduler
 COPY ./package.json /app
 COPY ./yarn.lock /app
 

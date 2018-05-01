@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import CreateDateHeader from '../components/CreateDateHeader'
 import Footer from '../components/Footer'
 
@@ -22,4 +23,7 @@ class CreateDate extends Component {
   }
 }
 
-export default CreateDate
+const mapStateToProps = state => {
+  return state.general
+}
+export default connect(mapStateToProps)(CreateDate)
