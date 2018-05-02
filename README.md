@@ -28,10 +28,19 @@ Running in daemon mode if you do not want it running in a command line all the t
 docker-compose up -d --force-recreate
 ```
 
-More instructions and a helper script will be coming along with the rest of the containers.
+## Rebuilding a container image
+Whenever you change the packages.json file you will need to rebuild your images locally and so will anybody else.  Make sure to alert the team if you need to do this so they'll know they need to not only pull the latest changes but also rebuild the container image.  Use the command below to rebuild the container image.  Get the container names from ./docker-compose.yml
+```
+docker-compose build <container-name>
+```
 
 ## Mongo
 Can connect to mongo with any client as long as you specifiy the home address instead of localhost (127.0.0.1) using the normal default mongo port.
+
+You can load the locations data into your database via mongorestore command if you aren't using docker.  The file to use is in /backups/locs.gz
+```
+mongorestore --gzip -d datenite --archive=backups/locs.gz
+```
 
 ## Redis
 Can connect to redis via the redis-cli client.  All ports are the normal ones.
