@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import CreateDateHeader from '../components/CreateDateHeader'
 import Footer from '../components/Footer'
+import YelpInfo from '../components/YelpInfo'
 
 class CreateDate extends Component {
   render () {
@@ -16,6 +17,7 @@ class CreateDate extends Component {
           <div className='col'>
             MAP GOES HERE!
           </div>
+          <YelpInfo />
         </div>
         <Footer />
       </div>
