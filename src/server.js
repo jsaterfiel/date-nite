@@ -15,15 +15,9 @@ app.use((req, res, next) => {
   next()
 })
 
-app.get('/api/yelp/businesses/', async (req, res) => {
-  const search = {
-    term: 'food',
-    limit: 20,
-    location: 'Jersey'
-  }
-
+app.get('/api/yelp/businesses', async (req, res) => {
   try {
-    const result = await Yelp.getBusinesses(search);
+    const result = await Yelp.getBusinesses(req.query);
     res.status(200).send(JSON.stringify(result.data))
   } catch (error) {
     console.log('ERROR api/yelp/businesses ', error)

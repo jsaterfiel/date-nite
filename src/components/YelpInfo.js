@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import GeoLocator from 'geolocator'
 import Axios from 'axios'
 import Config from '../config'
 
@@ -11,20 +12,29 @@ class YelpInfo extends Component {
     }
   }
 
-  // const search = {
-  //   term: 'food',
-  //   limit: 20,
-  //   location: 'Jersey'
-  // }
-
   componentWillMount = async () => {
-    const businesses = await this.getBusinessInfo()
-    this.setState({businesses})
+    const self = this
+    const search = {
+      term: 'food',
+      limit: 20
+    }
+    GeoLocator.locate({}, async function (err, location) {
+      if (err) {
+        return console.log(err)
+      } else {
+        search.latitude = location.coords.latitude
+        search.longitude = location.coords.longitude
+        const businesses = await self.getBusinessInfo(search)
+        self.setState({ businesses })
+      }
+    })
   }
 
-  getBusinessInfo = async () => {
-    const BusinessSearchUrl = `${Config.PROXY_SERVER}api/yelp/businesses/`
-    const info = await Axios.get(BusinessSearchUrl)
+  getBusinessInfo = async (search) => {
+    const BusinessSearchUrl = `${Config.PROXY_SERVER}api/yelp/businesses`
+    const info = await Axios.get(BusinessSearchUrl, {
+      params: search
+    })
 
     return info.data.businesses
   }

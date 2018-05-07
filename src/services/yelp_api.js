@@ -7,11 +7,16 @@ const YelpConfig = Config.YelpConfig
 
 const YelpAPI = {
   getBusinesses: async (searchCriteria) => {
-    let response
-    const limit = searchCriteria.limit || DEFAULT_LIMIT
-    const radius = searchCriteria.radius || DEFAULT_RADIUS
+    let response, queryString
+    const limit = !isNaN(searchCriteria.limit) ? parseInt(searchCriteria.limit) : DEFAULT_LIMIT
+    const radius = !isNaN(searchCriteria.radius) ? parseFloat(searchCriteria.radius) : DEFAULT_RADIUS
+    if (searchCriteria.location) {
+      queryString = `term=${searchCriteria.term}&location=${searchCriteria.location}&radius=${radius}&limit=${limit}`
+    } else {
+      queryString = `term=${searchCriteria.term}&latitude=${searchCriteria.latitude}&longitude=${searchCriteria.longitude}
+                      &radius=${radius}&limit=${limit}`
+    }
     try {
-      const queryString = `term=${searchCriteria.term}&location=${searchCriteria.location}&radius=${radius}&limit=${limit}`
       const url = `${YelpConfig.API_URL}businesses/search?${queryString}`
       response = await Axios.get(url, {
         headers: {
