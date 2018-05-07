@@ -23,7 +23,7 @@ services:
     dockerfile: "./docker_files/api/Dockerfile"
    links:
      - redis
-     - mongo
+     - mongo-custom
    volumes:
      - "./api:/app/api"
    ports:
@@ -34,13 +34,13 @@ services:
     context: .
     dockerfile: "./docker_files/scheduler/Dockerfile"
    links:
-     - mongo
+     - mongo-custom
    volumes:
      - "./scheduler:/app/scheduler"
     
-  mongo:
-    image: mongo
-    volumes:
-      - "./data:/data/db"
-    ports:
-     - "27017:27017"
+  mongo-custom:
+   build:
+    context: .
+    dockerfile: "./docker_files/mongo-custom/Dockerfile"
+   ports:
+    - "27017:27017"
