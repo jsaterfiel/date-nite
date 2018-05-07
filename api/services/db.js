@@ -1,6 +1,6 @@
 const mongo = require('mongodb-bluebird')
 
-const dbURL = 'mongodb://mongo:27017/datenite'
+const dbURL = 'mongodb://mongo-custom:27017/datenite'
 
 const DB = {
   getConnection: async () => {
