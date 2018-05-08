@@ -41,7 +41,7 @@ class CreateDateHeader extends Component {
   render () {
     return (
       <div className='create-date-header'>
-        <nav className='create-date-nav navbar navbar-dark bg-dark'>
+        <div className='create-date-nav navbar navbar-dark bg-dark'>
           <div className='input-group mb-3 count-container'>
             <div className='input-group-prepend'>
               <button className='btn btn-outline-info dropdown-toggle' type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Count</button>
@@ -60,7 +60,7 @@ class CreateDateHeader extends Component {
             minTime={Moment().hours(13).minutes(0)}
             maxTime={Moment().hours(23)}
             onChange={this.onSelectDateChange} placeholderText='When is your date?' />
-        </nav>
+        </div>
       </div >
     )
   }
