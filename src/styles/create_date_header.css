@@ -1,0 +1,31 @@
+.count-container {
+  width: 160px; }
+
+.count-text {
+  max-width: 80px; }
+
+.custom-datepicker {
+  float: right;
+  border-radius: 0.25rem;
+  text-align: center;
+  height: 37px; }
+
+.react-datepicker__time-list {
+  padding: 0 !important; }
+
+.react-datepicker__time-list-item--disabled {
+  display: none; }
+
+.react-datepicker__time-container {
+  width: inherit !important; }
+
+.react-datepicker__time-box {
+  width: inherit !important; }
+
+.create-date-header .btn-outline-info {
+  border-color: #008295;
+  background-color: #008295;
+  color: #ffffff; }
+  .create-date-header .btn-outline-info:hover {
+    border-color: #17a2b8;
+    background-color: #17a2b8; }
