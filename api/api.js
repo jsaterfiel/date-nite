@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const uberService = require('./services/uber')
+const Yelp = require('./services/yelp_api')
 
 const app = express()
 
@@ -16,7 +17,7 @@ app.use((req, res, next) => {
 
 app.get('/api', async (req, res) => {
   res.setHeader('Content-Type', 'application/json')
-  res.send(JSON.stringify({hello: 'world'}))
+  res.send(JSON.stringify({ hello: 'world' }))
 })
 
 // handle oauth2 redirect from uber
@@ -25,9 +26,10 @@ app.get('/api/uber-sign-up', async (req, res) => {
   const accessCode = req.query.accessCode
   if (accessCode === undefined) {
     res.status(500)
-    res.send(JSON.stringify({error: 'Missing accessCode parameter'}))
+    res.send(JSON.stringify({ error: 'Missing accessCode parameter' }))
     return
   }
+
   // exchange for token
   // pull profile info from uber
   // write data to db
@@ -38,13 +40,24 @@ app.get('/api/uber-sign-up', async (req, res) => {
   res.send(JSON.stringify(result))
 })
 
+// get all businesses in an area
+app.get('/api/yelp/businesses', async (req, res) => {
+  try {
+    const result = await Yelp.getBusinesses(req.query)
+    res.status(200).send(JSON.stringify(result.data))
+  } catch (error) {
+    console.log('ERROR api/yelp/businesses ', error)
+    res.status(500).send(error)
+  }
+})
+
 // 404 handling
 app.use((req, res) => {
   res.status(404)
-  res.send(JSON.stringify({error: 'api path doesn\'t exist'}))
+  res.send(JSON.stringify({ error: 'api path doesn\'t exist' }))
 })
 
-const port = 3000
+const port = 3003
 
 app.listen(port, () => {
   console.log('CS-554 Final Project: Team 404 - API Server')

@@ -13,7 +13,7 @@ const YelpConfig = {
   API_URL: 'https://api.yelp.com/v3/'
 }
 
-const PORT = 5000
+const PORT = 3003
 
 const PROXY_SERVER = `http://localhost:${PORT}/`
 
