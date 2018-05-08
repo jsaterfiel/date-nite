@@ -10,7 +10,7 @@ bluebird.promisifyAll(redis.RedisClient.prototype)
 bluebird.promisifyAll(redis.Multi.prototype)
 
 const uberInstance = axios.create()
-// const cache = redis.createClient({url: 'redis://redis:6379'})
+const cache = redis.createClient({url: 'redis://redis:6379'})
 
 uberInstance.interceptors.request.use((reqConfig) => {
   if (reqConfig.url.indexOf('https://') === -1) {
@@ -54,7 +54,7 @@ const API = {
     await db.createUser(profile)
     // store user profile in redis
     console.log('redis key', 'session_' + sessionID)
-    // await cache.setAsync('session_' + sessionID, JSON.stringify(profile), 'EX', result.data.expires_in)
+    await cache.setAsync('session_' + sessionID, JSON.stringify(profile), 'EX', result.data.expires_in)
     return {sessionID: sessionID, expiresIn: result.data.expires_in}
   },
 
