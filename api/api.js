@@ -51,6 +51,17 @@ app.get('/api/yelp/businesses', async (req, res) => {
   }
 })
 
+// get a specific restaurant by name and location
+app.get('/api/yelp/businesses/match', async (req, res) => {
+  try {
+    const result = await Yelp.matchBusiness(req.query)
+    res.status(200).send(JSON.stringify(result.data))
+  } catch (error) {
+    console.log('ERROR api/yelp/businesses ', error)
+    res.status(500).send(error)
+  }
+})
+
 // 404 handling
 app.use((req, res) => {
   res.status(404)
