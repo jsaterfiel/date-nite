@@ -75,14 +75,17 @@ class YelpInfo extends Component {
       city: this.state.city,
       state: this.state.state
     }
-    const BusinessMatchUrl = `${Config.PROXY_SERVER}api/yelp/businesses/match`
-    const response = await Axios.get(BusinessMatchUrl, {
+    const businessMatchUrl = `${Config.PROXY_SERVER}api/yelp/businesses/match`
+    const response = await Axios.get(businessMatchUrl, {
       params: info
     })
 
-    const business = response.data.businesses[0]
-    console.log(business)
-    this.setState({ restaurant_details: business })
+    const businessId = response.data.businesses[0].id
+    const businessByIdUrl = `${Config.PROXY_SERVER}api/yelp/businesses/${businessId}`
+    const business = await Axios.get(businessByIdUrl)
+
+    console.log(business.data)
+    this.setState({ restaurant_details: business.data })
   }
 
   showRestaurant = () => {

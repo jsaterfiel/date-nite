@@ -3,6 +3,10 @@ const Config = require('../config.js')
 
 const DEFAULT_LIMIT = 50
 const DEFAULT_RADIUS = 16000 // 16000 m = 10 mi
+const DEFAULT_COUNTRY = 'US'
+const DEFAULT_ADDRESS = 'a'
+const DEFAULT_MATCH_THRESHOLD = 'default'
+const DEFAULT_LIMIT_MATCH = 1
 const YelpConfig = Config.YelpConfig
 
 const YelpAPI = {
@@ -34,10 +38,10 @@ const YelpAPI = {
   matchBusiness: async (info) => {
     let response
     const defaultInfo = {
-      country: 'US',
-      address1: 'a', // Some value required with this parameter by Yelp
-      match_threshold: 'default',
-      limit: 1
+      country: DEFAULT_COUNTRY,
+      address1: DEFAULT_ADDRESS, // Some value required with this parameter by Yelp
+      match_threshold: DEFAULT_MATCH_THRESHOLD,
+      limit: DEFAULT_LIMIT_MATCH
     }
     const businessInfo = {
       name: info.name,
@@ -56,10 +60,26 @@ const YelpAPI = {
         params: parameters
       })
 
-      console.log('API Response', response.data.businesses[0])
       return response
     } catch (ex) {
       console.log('ERROR Yelp API Match \n', ex)
+      return []
+    }
+  },
+
+  getBusinessesById: async (id) => {
+    let response
+    try {
+      const url = `${YelpConfig.API_URL}businesses/${id}`
+      response = await Axios.get(url, {
+        headers: {
+          Authorization: 'Bearer ' + YelpConfig.API_KEY
+        }
+      })
+
+      return response
+    } catch (ex) {
+      console.log('ERROR Yelp API Id Search  \n', ex)
       return []
     }
   }

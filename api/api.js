@@ -57,7 +57,18 @@ app.get('/api/yelp/businesses/match', async (req, res) => {
     const result = await Yelp.matchBusiness(req.query)
     res.status(200).send(JSON.stringify(result.data))
   } catch (error) {
-    console.log('ERROR api/yelp/businesses ', error)
+    console.log('ERROR api/yelp/businesses/match ', error)
+    res.status(500).send(error)
+  }
+})
+
+// get restaurant details by Id
+app.get('/api/yelp/businesses/:id', async (req, res) => {
+  try {
+    const result = await Yelp.getBusinessesById(req.params.id)
+    res.status(200).send(JSON.stringify(result.data))
+  } catch (error) {
+    console.log('ERROR api/yelp/businesses/:id ', error)
     res.status(500).send(error)
   }
 })
