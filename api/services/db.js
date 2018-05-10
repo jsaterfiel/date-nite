@@ -18,7 +18,7 @@ const DB = {
     try {
       users = await dbo.collection('users')
     } catch (e) {
-      console.log('createUser get collection', e)
+      console.log('db createUser get collection', e)
       throw e
     } finally {
       if (users === null) {
@@ -29,14 +29,14 @@ const DB = {
     try {
       await users.removeById(userData._id)
     } catch (e) {
-      console.log('createUser del', e)
+      console.log('db createUser del', e)
       // don't care as this can be thrown when the record doesn't exist
     }
 
     try {
       await users.insert(userData)
     } catch (e) {
-      console.log('createUser insert', e)
+      console.log('db createUser insert', e)
       throw e
     } finally {
       try { dbo.close() } catch (e) { }
@@ -49,7 +49,7 @@ const DB = {
     try {
       users = await dbo.collection('users')
     } catch (e) {
-      console.log('createUser get collection', e)
+      console.log('db createUser get collection', e)
       throw e
     } finally {
       if (users === null) {
@@ -59,7 +59,65 @@ const DB = {
     try {
       data = await users.findById(id)
     } catch (e) {
-      console.log('createUser findById', e)
+      console.log('db createUser findById', e)
+      throw e
+    } finally {
+      try { dbo.close() } catch (e) { }
+    }
+    return data
+  },
+  getLocation: async id => {
+    const dbo = await DB.getConnection()
+    let locs = null
+    let data = null
+    try {
+      locs = await dbo.collection('locations')
+    } catch (e) {
+      console.log('db getLocation get collection', e)
+      throw e
+    } finally {
+      if (locs === null) {
+        try { dbo.close() } catch (e) { }
+      }
+    }
+    try {
+      data = await locs.findById(id)
+    } catch (e) {
+      console.log('db getLocation findById', e)
+      throw e
+    } finally {
+      try { dbo.close() } catch (e) { }
+    }
+    return data
+  },
+  searchLocations: async (lng, lat, radiusMeters, priceNum) => {
+    const dbo = await DB.getConnection()
+    let locs = null
+    let data = null
+    try {
+      locs = await dbo.collection('locations')
+    } catch (e) {
+      console.log('db searchLocations get collection', e)
+      throw e
+    } finally {
+      if (locs === null) {
+        try { dbo.close() } catch (e) { }
+      }
+    }
+    try {
+      data = await locs.find({
+        location:
+          { $near:
+             {
+               $geometry: { type: 'Point', coordinates: [ parseFloat(lng), parseFloat(lat) ] },
+               $minDistance: 0,
+               $maxDistance: parseInt(radiusMeters)
+             }
+          },
+        price: { $gte: parseInt(priceNum) }
+      })
+    } catch (e) {
+      console.log('db searchLocations find', e)
       throw e
     } finally {
       try { dbo.close() } catch (e) { }

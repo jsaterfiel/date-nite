@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const uberService = require('./services/uber')
 const Yelp = require('./services/yelp_api')
+const loc = require('./services/locations')
 
 const app = express()
 
@@ -29,15 +30,31 @@ app.get('/api/uber-sign-up', async (req, res) => {
     res.send(JSON.stringify({ error: 'Missing accessCode parameter' }))
     return
   }
-
-  // exchange for token
-  // pull profile info from uber
-  // write data to db
-  // set user data in redis with generated session key
-  // return session key to user or return error
   res.setHeader('Content-Type', 'application/json')
-  const result = await uberService.auth(req.query.accessCode)
+  const result = await uberService.auth(accessCode)
   res.send(JSON.stringify(result))
+})
+
+app.get('/api/uber/estimate', async (req, res) => {
+  // get query string params and ensure they exist
+  const sessionID = req.query.session
+  const startLng = req.query.startLng
+  const startLat = req.query.startLat
+  const endLng = req.query.endLng
+  const endLat = req.query.endLat
+  if (sessionID === undefined || startLng === undefined || startLat === undefined || endLng === undefined || endLat === undefined) {
+    res.status(500)
+    res.send(JSON.stringify({ error: 'Missing parameter.  Parameters are: session, startLng, startLat, endLng, endLat' }))
+    return
+  }
+  res.setHeader('Content-Type', 'application/json')
+  try {
+    const result = await uberService.getEstimate(startLng, startLat, endLng, endLat, sessionID)
+    res.send(JSON.stringify(result))
+  } catch (e) {
+    res.status(500)
+    res.send(JSON.stringify({error: e.message}))
+  }
 })
 
 // get all businesses in an area
@@ -47,7 +64,8 @@ app.get('/api/yelp/businesses', async (req, res) => {
     res.status(200).send(JSON.stringify(result.data))
   } catch (error) {
     console.log('ERROR api/yelp/businesses ', error)
-    res.status(500).send(error)
+    res.status(500)
+    res.send(JSON.stringify({ error: 'Unable to process the request to yelp' }))
   }
 })
 
@@ -70,6 +88,30 @@ app.get('/api/yelp/businesses/:id', async (req, res) => {
   } catch (error) {
     console.log('ERROR api/yelp/businesses/:id ', error)
     res.status(500).send(error)
+    console.log('ERROR api/yelp/businesses ', error)
+    res.send(JSON.stringify({ error: 'Unable to process the request to yelp' }))
+  }
+})
+
+// get a location by its id
+app.get('/api/locations/:id', async (req, res) => {
+  try {
+    const result = await loc.getLocation(req.params.id)
+    res.status(200).send(JSON.stringify(result))
+  } catch (error) {
+    console.log('ERROR api/locations ', error)
+    res.send(JSON.stringify({ error: error.message }))
+  }
+})
+
+// search locations by lng, lat, radius(meters) and price id (2-4)
+app.get('/api/locations/search/:lng/:lat/:radius/:price', async (req, res) => {
+  try {
+    const result = await loc.search(req.params.lng, req.params.lat, req.params.radius, req.params.price)
+    res.status(200).send(JSON.stringify(result))
+  } catch (error) {
+    console.log('ERROR api/locations/search ', error)
+    res.send(JSON.stringify({ error: error.message }))
   }
 })
 
@@ -79,7 +121,7 @@ app.use((req, res) => {
   res.send(JSON.stringify({ error: 'api path doesn\'t exist' }))
 })
 
-const port = 3003
+const port = 3000
 
 app.listen(port, () => {
   console.log('CS-554 Final Project: Team 404 - API Server')

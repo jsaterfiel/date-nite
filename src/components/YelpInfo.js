@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import GeoLocator from 'geolocator'
 import Axios from 'axios'
-import Config from '../config'
+import { Config } from '../config'
 
 class YelpInfo extends Component {
   constructor (props) {

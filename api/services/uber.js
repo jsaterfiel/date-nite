@@ -1,16 +1,11 @@
 const axios = require('axios')
 const querystring = require('querystring')
-const redis = require('redis')
-const bluebird = require('bluebird')
+const cache = require('./cache')
 const uuid = require('uuid/v4')
 const db = require('./db')
 const config = require('../config')
 
-bluebird.promisifyAll(redis.RedisClient.prototype)
-bluebird.promisifyAll(redis.Multi.prototype)
-
 const uberInstance = axios.create()
-const cache = redis.createClient({url: 'redis://redis:6379'})
 
 uberInstance.interceptors.request.use((reqConfig) => {
   if (reqConfig.url.indexOf('https://') === -1) {
@@ -19,11 +14,9 @@ uberInstance.interceptors.request.use((reqConfig) => {
   // somehow an auth header was set here? 'Authorization: Bearer oijsdfoisdofiusodifus'
   let token = null
   if (reqConfig.data && reqConfig.data.token) {
-    console.log('token found')
     token = reqConfig.data.token
     reqConfig.headers['Authorization'] = 'Bearer ' + token
   }
-  console.log('header', reqConfig.headers)
   return reqConfig
 })
 
@@ -42,18 +35,18 @@ const API = {
       console.log('token request', e.response.data.error)
       return null
     }
-    console.log('token', result.data.access_token)
     const sessionID = uuid()
     const token = result.data.access_token
+
     // get profile
     const profile = await API.profile(token)
+    profile.token = result.data
     if (profile === null) {
       return null
     }
     // check if user is in mongo
     await db.createUser(profile)
     // store user profile in redis
-    console.log('redis key', 'session_' + sessionID)
     await cache.setAsync('session_' + sessionID, JSON.stringify(profile), 'EX', result.data.expires_in)
     return {sessionID: sessionID, expiresIn: result.data.expires_in}
   },
@@ -66,8 +59,106 @@ const API = {
       console.log('profile request', e.response.data)
       return null
     }
-    console.log('profile', result.data)
     return result.data
+  },
+
+  getUser: async sessionID => {
+    try {
+      const result = await cache.getAsync('session_' + sessionID)
+      if (result === null) return false
+
+      return JSON.parse(result)
+    } catch (e) {
+      console.log('getUser check cache', e)
+      return false
+    }
+  },
+
+  getEstimate: async (startLng, startLat, endLng, endLat, sessionID) => {
+    let result = null
+    let carID = null
+    let pickupTime = null
+    let priceRange = null
+
+    // check for user session
+    let user = await API.getUser(sessionID)
+    if (user === false) throw new Error('Invalid auth')
+
+    // get products for lng lat
+    try {
+      result = await uberInstance.get('products', {
+        params: {
+          longitude: startLng,
+          latitude: startLat
+        },
+        headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}
+      })
+      for (let car of result.data.products) {
+        if (car.product_group === 'uberx') {
+          carID = car.product_id
+        }
+      }
+    } catch (e) {
+      console.log('uber getEstimate products', e.response.data)
+      throw new Error('Error with request')
+    }
+
+    if (carID === null) {
+      throw new Error('No uberx found')
+    }
+
+    // get time estimate for pickup
+    try {
+      result = await uberInstance.get('estimates/time', {
+        params: {
+          start_longitude: startLng,
+          start_latitude: startLat,
+          product_id: carID
+        },
+        headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}
+      })
+      if (result.data.times.length > 0) {
+        // in seconds
+        pickupTime = result.data.times[0].estimate
+      }
+    } catch (e) {
+      console.log('uber getEstimate time', e.response.data)
+      throw new Error('Error with request')
+    }
+
+    if (pickupTime === null) {
+      throw new Error('No uberx available')
+    }
+
+    // get price estimate for trip
+    try {
+      result = await uberInstance.get('estimates/price', {
+        params: {
+          start_longitude: startLng,
+          start_latitude: startLat,
+          end_longitude: endLng,
+          end_latitude: endLat,
+          product_id: carID
+        },
+        headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}
+      })
+      if (result.data.prices.length > 0) {
+        for (let price of result.data.prices) {
+          if (price.product_id === carID) {
+            priceRange = price.estimate
+          }
+        }
+      }
+    } catch (e) {
+      console.log('uber getEstimate price', e.response.data)
+      throw new Error('Error with request')
+    }
+    const output = {
+      productID: carID,
+      pickupTime: pickupTime,
+      estimate: priceRange
+    }
+    return output
   }
 }
 
