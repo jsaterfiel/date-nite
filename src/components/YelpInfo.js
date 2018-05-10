@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { getBusinessInfo } from '../store/actions/action_yelp'
 // import GeoLocator from 'geolocator'
-import Axios from 'axios'
-import Config from '../config'
 
 class YelpInfo extends Component {
   constructor (props) {
@@ -13,8 +14,7 @@ class YelpInfo extends Component {
       latitude: '',
       longitude: '',
       city: '',
-      state: '',
-      restaurant_details: null
+      state: ''
     }
   }
 
@@ -38,14 +38,14 @@ class YelpInfo extends Component {
   //   })
   // }
 
-  getBusinessInfo = async (search) => {
-    const BusinessSearchUrl = `${Config.PROXY_SERVER}api/yelp/businesses`
-    const info = await Axios.get(BusinessSearchUrl, {
-      params: search
-    })
+  // getBusinessInfo = async (search) => {
+  //   const BusinessSearchUrl = `${Config.PROXY_SERVER}api/yelp/businesses`
+  //   const info = await Axios.get(BusinessSearchUrl, {
+  //     params: search
+  //   })
 
-    return info.data.businesses
-  }
+  //   return info.data.businesses
+  // }
 
   showInfo = () => {
     let items
@@ -75,24 +75,15 @@ class YelpInfo extends Component {
       city: this.state.city,
       state: this.state.state
     }
-    const businessMatchUrl = `${Config.PROXY_SERVER}api/yelp/businesses/match`
-    const response = await Axios.get(businessMatchUrl, {
-      params: info
-    })
 
-    const businessId = response.data.businesses[0].id
-    const businessByIdUrl = `${Config.PROXY_SERVER}api/yelp/businesses/${businessId}`
-    const business = await Axios.get(businessByIdUrl)
-
-    console.log(business.data)
-    this.setState({ restaurant_details: business.data })
+    this.props.onMarkerSelect(info)
   }
 
   showRestaurant = () => {
     let listDetail = []
-    for (const key of Object.keys(this.state.restaurant_details)) {
-      if (typeof this.state.restaurant_details[key] !== 'object') {
-        listDetail.push(<li>{key}: {this.state.restaurant_details[key]}</li>)
+    for (const key of Object.keys(this.props.restaurant_details)) {
+      if (typeof this.props.restaurant_details[key] !== 'object') {
+        listDetail.push(<li>{key}: {this.props.restaurant_details[key]}</li>)
       }
     }
 
@@ -144,7 +135,7 @@ class YelpInfo extends Component {
             </span>
           </div>
         </form>
-        { this.state.restaurant_details &&
+        { this.props.restaurant_details &&
           <ul>
             {this.showRestaurant()}
           </ul>
@@ -154,4 +145,16 @@ class YelpInfo extends Component {
   }
 }
 
-export default YelpInfo
+const mapStateToProps = state => {
+  return {
+    restaurant_details: state.restaurantDetails
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ onMarkerSelect: getBusinessInfo }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(YelpInfo)
+
+// export default YelpInfo
