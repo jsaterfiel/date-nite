@@ -4,22 +4,29 @@
  * Ensure that only sandbox urls are used when payment or alerting of user content occurs like in uber's case.
  */
 const Config = {
-  UberClientID: 'cYflhnlrqm26Jtq9qVadHRjaYBSASSIO',
-  ApiURL: 'http://localhost:3000/'
-}
+  UberClientID: "cYflhnlrqm26Jtq9qVadHRjaYBSASSIO",
+  ApiURL: "http://localhost:3000/"
+};
 
 const YelpConfig = {
-  API_KEY: '3XbLY2tE_c1P2NUxopNYIasa3UJH_ovhNltfZS-jMZRClLHldvhNguZ5ZNq91Nff7CG9mocg_g3crecD7AB2ZSR1Ma5RKb_BV5mo8j3G1ukW1oLfKjyyud-lAenoWnYx',
-  API_URL: 'https://api.yelp.com/v3/'
-}
+  API_KEY:
+    "3XbLY2tE_c1P2NUxopNYIasa3UJH_ovhNltfZS-jMZRClLHldvhNguZ5ZNq91Nff7CG9mocg_g3crecD7AB2ZSR1Ma5RKb_BV5mo8j3G1ukW1oLfKjyyud-lAenoWnYx",
+  API_URL: "https://api.yelp.com/v3/"
+};
 
-const PORT = 3000
+const GoogleConfig = {
+  API_KEY: "AIzaSyA4kiE6M-jBsMPtbgu-EsNlaoJulveWitg",
+  API_URL: "https://maps.googleapis.com/maps/api/js"
+};
 
-const PROXY_SERVER = `http://localhost:${PORT}/`
+const PORT = 3000;
+
+const PROXY_SERVER = `http://localhost:${PORT}/`;
 
 module.exports = {
   Config: Config,
   YelpConfig: YelpConfig,
   PORT: PORT,
-  PROXY_SERVER: PROXY_SERVER
-}
+  PROXY_SERVER: PROXY_SERVER,
+  GoogleConfig: GoogleConfig
+};
