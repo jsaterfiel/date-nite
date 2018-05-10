@@ -13,33 +13,22 @@ export default () => {
         }}
         render={(googleMaps, error) =>
           googleMaps ? (
-            <div style={{ height: "300px" }}>
+            <div style={{ height: "300px", width: "100%" }}>
               {error && error}
               <GoogleMap
                 googleMaps={googleMaps}
                 coordinates={[
                   {
-                    title: "Toulouse",
+                    title: "Hoboken",
                     position: {
-                      lat: 43.604363,
-                      lng: 1.443363
+                      lat: 40.74399,
+                      lng: -74.03236
                     },
                     onLoaded: (googleMaps, map, marker) => {
-                      // Set Marker animation
-                      marker.setAnimation(googleMaps.Animation.BOUNCE);
-
                       // Define Marker InfoWindow
                       const infoWindow = new googleMaps.InfoWindow({
-                        content: `
-                          <div>
-                            <h3>Toulouse<h3>
-                            <div>
-                              Toulouse is the capital city of the southwestern
-                              French department of Haute-Garonne,
-                              as well as of the Occitanie region.
-                            </div>
-                          </div>
-                        `
+                        content:
+                          "<div><h2> Panera Bread </h2><p> Famous for healthy Food</p><button>Book It</button><button>Details</button> </div>"
                       });
 
                       // Open InfoWindow when Marker will be clicked
@@ -48,21 +37,56 @@ export default () => {
                       });
 
                       // // Change icon when Marker will be hovered
-                      // googleMaps.event.addListener(marker, "mouseover", () => {
-                      //   marker.setIcon(iconMarkerHover);
-                      // });
+                      googleMaps.event.addListener(marker, "mouseover", () => {
+                        marker.setIcon(
+                          "http://maps.google.com/mapfiles/marker_green.png"
+                        );
+                      });
 
-                      // googleMaps.event.addListener(marker, "mouseout", () => {
-                      //   marker.setIcon(iconMarker);
-                      // });
+                      googleMaps.event.addListener(marker, "mouseout", () => {
+                        marker.setIcon();
+                      });
 
                       // Open InfoWindow directly
-                      infoWindow.open(map, marker);
+                      //infoWindow.open(map, marker);
+                    }
+                  },
+                  {
+                    title: "Carlo's Bakery",
+                    position: {
+                      lat: 40.7372,
+                      lng: -74.0308
+                    },
+                    onLoaded: (googleMaps, map, marker) => {
+                      // Define Marker InfoWindow
+                      const infoWindow = new googleMaps.InfoWindow({
+                        content:
+                          "<div><h2> Carlos Bakery </h2><p> Delicious Cake</p><button>Book It</button><button>Details</button> </div>"
+                      });
+
+                      // Open InfoWindow when Marker will be clicked
+                      googleMaps.event.addListener(marker, "click", () => {
+                        infoWindow.open(map, marker);
+                      });
+
+                      // // Change icon when Marker will be hovered
+                      googleMaps.event.addListener(marker, "mouseover", () => {
+                        marker.setIcon(
+                          "http://maps.google.com/mapfiles/marker_green.png"
+                        );
+                      });
+
+                      googleMaps.event.addListener(marker, "mouseout", () => {
+                        marker.setIcon();
+                      });
+
+                      // Open InfoWindow directly
+                      //infoWindow.open(map, marker);
                     }
                   }
                 ]}
-                center={{ lat: 43.604363, lng: 1.443363 }}
-                zoom={8}
+                center={{ lat: 40.74399, lng: -74.03236 }}
+                zoom={12}
               />
             </div>
           ) : (

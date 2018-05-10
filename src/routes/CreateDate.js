@@ -36,7 +36,7 @@ class CreateDate extends Component {
 
         {
           //    this.state.showGoogle && (
-          <div className="row">
+          <div>
             <GoogleMapContainer />
           </div>
           // )
