@@ -37,7 +37,6 @@ const API = {
       console.log('token request', e.response.data.error)
       return null
     }
-    console.log('token', result.data.access_token)
     const sessionID = uuid()
     const token = result.data.access_token
     // get profile
@@ -48,7 +47,6 @@ const API = {
     // check if user is in mongo
     await db.createUser(profile)
     // store user profile in redis
-    console.log('redis key', 'session_' + sessionID)
     await cache.setAsync('session_' + sessionID, JSON.stringify(profile), 'EX', result.data.expires_in)
     return {sessionID: sessionID, expiresIn: result.data.expires_in}
   },
@@ -61,7 +59,6 @@ const API = {
       console.log('profile request', e.response.data)
       return null
     }
-    console.log('profile', result.data)
     return result.data
   },
 
