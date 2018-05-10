@@ -1,6 +1,7 @@
 const Axios = require('axios')
 const Config = require('../../config')
 
+// need to implement error handling here
 export const getBusinessInfo = (info) => {
   return dispatch => {
     const businessMatchUrl = `${Config.PROXY_SERVER}api/yelp/businesses/match`
@@ -15,7 +16,7 @@ export const getBusinessInfo = (info) => {
             .then(
               business => {
                 console.log(business.data)
-                dispatch(getRestaurantDetails(business.data))
+                dispatch(setRestaurantDetails(business.data))
               }
             )
         }
@@ -23,7 +24,7 @@ export const getBusinessInfo = (info) => {
   }
 }
 
-export const getRestaurantDetails = (details) => {
+export const setRestaurantDetails = (details) => {
   return {
     type: 'MARKER_SELECTED',
     payload: details

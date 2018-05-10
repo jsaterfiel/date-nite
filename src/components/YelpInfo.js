@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getBusinessInfo } from '../store/actions/action_yelp'
 // import GeoLocator from 'geolocator'
-// import Axios from 'axios'
-// import Config from '../config'
 
 class YelpInfo extends Component {
   constructor (props) {
@@ -16,8 +14,7 @@ class YelpInfo extends Component {
       latitude: '',
       longitude: '',
       city: '',
-      state: '',
-      restaurant_details: null
+      state: ''
     }
   }
 
@@ -80,18 +77,6 @@ class YelpInfo extends Component {
     }
 
     this.props.onMarkerSelect(info)
-
-    // const businessMatchUrl = `${Config.PROXY_SERVER}api/yelp/businesses/match`
-    // const response = await Axios.get(businessMatchUrl, {
-    //   params: info
-    // })
-
-    // const businessId = response.data.businesses[0].id
-    // const businessByIdUrl = `${Config.PROXY_SERVER}api/yelp/businesses/${businessId}`
-    // const business = await Axios.get(businessByIdUrl)
-
-    // console.log(business.data)
-    // this.setState({ restaurant_details: business.data })
   }
 
   showRestaurant = () => {
