@@ -1,16 +1,11 @@
 const axios = require('axios')
 const querystring = require('querystring')
-const redis = require('redis')
-const bluebird = require('bluebird')
+const cache = require('./cache')
 const uuid = require('uuid/v4')
 const db = require('./db')
 const config = require('../config')
 
-bluebird.promisifyAll(redis.RedisClient.prototype)
-bluebird.promisifyAll(redis.Multi.prototype)
-
 const uberInstance = axios.create()
-const cache = redis.createClient({url: 'redis://redis:6379'})
 
 uberInstance.interceptors.request.use((reqConfig) => {
   if (reqConfig.url.indexOf('https://') === -1) {
@@ -68,6 +63,18 @@ const API = {
     }
     console.log('profile', result.data)
     return result.data
+  },
+
+  getUser: async sessionID => {
+    try {
+      const result = cache.getAsync('session_' + sessionID)
+      if (result === null) return false
+
+      return JSON.parse(result)
+    } catch (e) {
+      console.log('getUser check cache', e)
+      return false
+    }
   }
 }
 

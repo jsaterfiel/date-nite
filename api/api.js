@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const uberService = require('./services/uber')
 const Yelp = require('./services/yelp_api')
+const loc = require('./services/locations')
 
 const app = express()
 
@@ -47,7 +48,8 @@ app.get('/api/yelp/businesses', async (req, res) => {
     res.status(200).send(JSON.stringify(result.data))
   } catch (error) {
     console.log('ERROR api/yelp/businesses ', error)
-    res.status(500).send(error)
+    res.status(500)
+    res.send(JSON.stringify({ error: 'Unable to process the request to yelp' }))
   }
 })
 
@@ -58,7 +60,28 @@ app.get('/api/yelp/businesses/match', async (req, res) => {
     res.status(200).send(JSON.stringify(result.data))
   } catch (error) {
     console.log('ERROR api/yelp/businesses ', error)
-    res.status(500).send(error)
+    res.send(JSON.stringify({ error: 'Unable to process the request to yelp' }))
+  }
+})
+
+// get a location by its id
+app.get('/api/locations/:id', async (req, res) => {
+  try {
+    const result = await loc.getLocation(req.params.id)
+    res.status(200).send(JSON.stringify(result))
+  } catch (error) {
+    console.log('ERROR api/locations ', error)
+    res.send(JSON.stringify({ error: error.message }))
+  }
+})
+
+app.get('/api/locations/search/:lng/:lat/:radius/:price', async (req, res) => {
+  try {
+    const result = await loc.search(req.params.lng, req.params.lat, req.params.radius, req.params.price)
+    res.status(200).send(JSON.stringify(result))
+  } catch (error) {
+    console.log('ERROR api/locations/search ', error)
+    res.send(JSON.stringify({ error: error.message }))
   }
 })
 
@@ -68,7 +91,7 @@ app.use((req, res) => {
   res.send(JSON.stringify({ error: 'api path doesn\'t exist' }))
 })
 
-const port = 3003
+const port = 3000
 
 app.listen(port, () => {
   console.log('CS-554 Final Project: Team 404 - API Server')
