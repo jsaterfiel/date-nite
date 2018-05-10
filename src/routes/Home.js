@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { push } from 'react-router-redux'
 import Footer from '../components/Footer'
+import Massive from '../components/Massive'
 
 class Home extends Component {
   componentDidMount = async props => {
@@ -14,16 +15,7 @@ class Home extends Component {
   render () {
     return (
       <div className='container'>
-        <div className='row'>
-          <div className='col'>
-            <div className='card bg-dark text-white'>
-              <img className='card-img' src='http://via.placeholder.com/932x270' alt='Date Nite App Banner Image' />
-              <div className='card-img-overlay banner'>
-                <Link to='create-date' className='btn btn-primary'>Create A Date</Link>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Massive />
         <div className='row'>
           <div className='col pt-5'>
             <h2>Upcoming Date Nites <span className='badge badge-secondary'>4</span></h2>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 class Footer extends Component {
   render () {
@@ -7,15 +8,13 @@ class Footer extends Component {
       <div className='row'>
         <div className='col'>
           <nav className='nav mt-5 justify-content-end'>
-            <a className='nav-link active' href='#'>About</a>
-            <a className='nav-link active' href='#'>Contact Us</a>
+            <Link to='/about' className='nav-link active'>About</Link>
           </nav>
         </div>
       </div>
     )
   }
 }
-
 const mapStateToProps = state => {
   return state.general
 }

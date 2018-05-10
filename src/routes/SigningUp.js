@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import { Config } from '../config'
 import API from '../services/api'
 import { sessionSet, codeSet } from '../store/actions'
+import Massive from '../components/Massive'
 
 const QueryStringCodeCheck = '?code='
 const LoginURL = 'https://login.uber.com/oauth/v2/authorize?client_id=' + Config.UberClientID + '&response_type=code'
@@ -32,17 +33,7 @@ class SigningUp extends Component {
   render () {
     return (
       <div className='container'>
-        <div className='row'>
-          <div className='col'>
-            <div className='card bg-dark text-white'>
-              <img className='card-img' src='http://via.placeholder.com/932x270' alt='Date Nite App Banner' />
-              <div className='card-img-overlay'>
-                <h1 className='card-title'>Sign Up</h1>
-                <p className='card-text'>To get our services working we'll need you to authorize our site to interact with Uber on your behalf.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Massive />
         <div className='row'>
           <div className='col mt-5 mb-5'>
             {this.props.code !== '' ? (
