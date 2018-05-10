@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getRestaurantDetails } from '../store/actions/action_yelp'
+import { getBusinessInfo } from '../store/actions/action_yelp'
 // import GeoLocator from 'geolocator'
 // import Axios from 'axios'
 // import Config from '../config'
@@ -167,7 +167,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ onMarkerSelect: getRestaurantDetails }, dispatch)
+  return bindActionCreators({ onMarkerSelect: getBusinessInfo }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(YelpInfo)
