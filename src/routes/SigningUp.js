@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 import uberLogo from '../providerLogos/uber_logo.png'
 import Footer from '../components/Footer'
-import Config from '../config'
+import { Config } from '../config'
 import API from '../services/api'
 import { sessionSet, codeSet } from '../store/actions'
 
@@ -13,7 +13,9 @@ const LoginURL = 'https://login.uber.com/oauth/v2/authorize?client_id=' + Config
 class SigningUp extends Component {
   componentDidMount = async props => {
     if (window.location.search.indexOf(QueryStringCodeCheck) === 0) {
+      console.log(window.location)
       const code = window.location.search.replace(QueryStringCodeCheck, '')
+      console.log(code)
       this.props.setCode(code)
       const sessionData = await API.signUp(code)
       console.log('session', sessionData)

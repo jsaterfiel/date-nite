@@ -30,15 +30,31 @@ app.get('/api/uber-sign-up', async (req, res) => {
     res.send(JSON.stringify({ error: 'Missing accessCode parameter' }))
     return
   }
-
-  // exchange for token
-  // pull profile info from uber
-  // write data to db
-  // set user data in redis with generated session key
-  // return session key to user or return error
   res.setHeader('Content-Type', 'application/json')
-  const result = await uberService.auth(req.query.accessCode)
+  const result = await uberService.auth(accessCode)
   res.send(JSON.stringify(result))
+})
+
+app.get('/api/uber/estimate', async (req, res) => {
+  // get query string params and ensure they exist
+  const sessionID = req.query.session
+  const startLng = req.query.startLng
+  const startLat = req.query.startLat
+  const endLng = req.query.endLng
+  const endLat = req.query.endLat
+  if (sessionID === undefined || startLng === undefined || startLat === undefined || endLng === undefined || endLat === undefined) {
+    res.status(500)
+    res.send(JSON.stringify({ error: 'Missing parameter.  Parameters are: session, startLng, startLat, endLng, endLat' }))
+    return
+  }
+  res.setHeader('Content-Type', 'application/json')
+  try {
+    const result = await uberService.getEstimate(startLng, startLat, endLng, endLat, sessionID)
+    res.send(JSON.stringify(result))
+  } catch (e) {
+    res.status(500)
+    res.send(JSON.stringify({error: e.message}))
+  }
 })
 
 // get all businesses in an area
@@ -75,6 +91,7 @@ app.get('/api/locations/:id', async (req, res) => {
   }
 })
 
+// search locations by lng, lat, radius(meters) and price id (2-4)
 app.get('/api/locations/search/:lng/:lat/:radius/:price', async (req, res) => {
   try {
     const result = await loc.search(req.params.lng, req.params.lat, req.params.radius, req.params.price)

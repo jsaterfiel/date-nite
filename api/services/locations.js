@@ -49,7 +49,6 @@ const Locs = {
     try {
       const result = await cache.getAsync(cacheKey)
       if (result !== null) {
-        console.log('cached!')
         return JSON.parse(result)
       }
     } catch (e) {
@@ -59,7 +58,6 @@ const Locs = {
     // fetch and cache location from db if not in cache
     try {
       locs = await db.searchLocations(lng, lat, radiusMeters, priceNum)
-      console.log('searched!')
     } catch (e) {
       console.log('Locs search db', e)
       throw new Error('Unable to process your request')

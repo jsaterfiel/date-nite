@@ -14,11 +14,9 @@ uberInstance.interceptors.request.use((reqConfig) => {
   // somehow an auth header was set here? 'Authorization: Bearer oijsdfoisdofiusodifus'
   let token = null
   if (reqConfig.data && reqConfig.data.token) {
-    console.log('token found')
     token = reqConfig.data.token
     reqConfig.headers['Authorization'] = 'Bearer ' + token
   }
-  console.log('header', reqConfig.headers)
   return reqConfig
 })
 
@@ -39,8 +37,10 @@ const API = {
     }
     const sessionID = uuid()
     const token = result.data.access_token
+
     // get profile
     const profile = await API.profile(token)
+    profile.token = result.data
     if (profile === null) {
       return null
     }
@@ -64,7 +64,7 @@ const API = {
 
   getUser: async sessionID => {
     try {
-      const result = cache.getAsync('session_' + sessionID)
+      const result = await cache.getAsync('session_' + sessionID)
       if (result === null) return false
 
       return JSON.parse(result)
@@ -72,6 +72,93 @@ const API = {
       console.log('getUser check cache', e)
       return false
     }
+  },
+
+  getEstimate: async (startLng, startLat, endLng, endLat, sessionID) => {
+    let result = null
+    let carID = null
+    let pickupTime = null
+    let priceRange = null
+
+    // check for user session
+    let user = await API.getUser(sessionID)
+    if (user === false) throw new Error('Invalid auth')
+
+    // get products for lng lat
+    try {
+      result = await uberInstance.get('products', {
+        params: {
+          longitude: startLng,
+          latitude: startLat
+        },
+        headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}
+      })
+      for (let car of result.data.products) {
+        if (car.product_group === 'uberx') {
+          carID = car.product_id
+        }
+      }
+    } catch (e) {
+      console.log('uber getEstimate products', e.response.data)
+      throw new Error('Error with request')
+    }
+
+    if (carID === null) {
+      throw new Error('No uberx found')
+    }
+
+    // get time estimate for pickup
+    try {
+      result = await uberInstance.get('estimates/time', {
+        params: {
+          start_longitude: startLng,
+          start_latitude: startLat,
+          product_id: carID
+        },
+        headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}
+      })
+      if (result.data.times.length > 0) {
+        // in seconds
+        pickupTime = result.data.times[0].estimate
+      }
+    } catch (e) {
+      console.log('uber getEstimate time', e.response.data)
+      throw new Error('Error with request')
+    }
+
+    if (pickupTime === null) {
+      throw new Error('No uberx available')
+    }
+
+    // get price estimate for trip
+    try {
+      result = await uberInstance.get('estimates/price', {
+        params: {
+          start_longitude: startLng,
+          start_latitude: startLat,
+          end_longitude: endLng,
+          end_latitude: endLat,
+          product_id: carID
+        },
+        headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}
+      })
+      if (result.data.prices.length > 0) {
+        for (let price of result.data.prices) {
+          if (price.product_id === carID) {
+            priceRange = price.estimate
+          }
+        }
+      }
+    } catch (e) {
+      console.log('uber getEstimate price', e.response.data)
+      throw new Error('Error with request')
+    }
+    const output = {
+      productID: carID,
+      pickupTime: pickupTime,
+      estimate: priceRange
+    }
+    return output
   }
 }
 
