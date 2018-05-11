@@ -1,5 +1,5 @@
 const axios = require('axios')
-const config = require('./config')
+const config = require('../config')
 
 const uberInstance = axios.create()
 
@@ -18,8 +18,85 @@ uberInstance.interceptors.request.use((reqConfig) => {
 
 const API = {
   requestPickup: async (user, loc, trip) => {
-    // do uber pickup
-    console.log(user, loc, trip)
+    // find product
+    let result
+    let car = null
+    try {
+      console.log({
+        longitude: trip.location.coordinates[0],
+        latitude: trip.location.coordinates[1]
+      })
+      result = await uberInstance.get('products', {
+        params: {
+          longitude: trip.location.coordinates[0],
+          latitude: trip.location.coordinates[1]
+        },
+        headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}
+      })
+      console.log(result.data)
+      for (let product of result.data.products) {
+        if (product.product_group === 'uberx') {
+          car = product
+        }
+      }
+    } catch (e) {
+      console.log('uber requestPickup products', e.response.data)
+      throw new Error('Error with request')
+    }
+
+    if (car === null) {
+      if (result.data.products.length > 0) {
+        car = result.data.products[0]
+      } else {
+        throw new Error('No uber found')
+      }
+    }
+
+    // request estimate (post)
+    let fareID = null
+    try {
+      result = await uberInstance.post('requests/estimate', {
+        product_id: car.product_id,
+        start_longitude: trip.location.coordinates[0],
+        start_latitude: trip.location.coordinates[1],
+        end_longitude: loc.location.coordinates[0],
+        end_latitude: loc.location.coordinates[1]
+      },
+      {headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}})
+      if (result.data.fare) {
+        fareID = result.data.fare.fare_id
+      }
+    } catch (e) {
+      console.log('uber requestPickup requests estimate', e.response.data)
+      throw new Error('Error with request')
+    }
+
+    if (fareID === null) {
+      throw new Error('Unable to request fair due to surge pricing')
+    }
+
+    // request (post)
+    try {
+      result = await uberInstance.post('requests', {
+        fare_id: fareID,
+        product_id: car.product_id,
+        start_longitude: trip.location.coordinates[0],
+        start_latitude: trip.location.coordinates[1],
+        end_longitude: loc.location.coordinates[0],
+        end_latitude: loc.location.coordinates[1]
+      },
+      {headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}})
+      console.log('request', result.data)
+      if (result.data.request_id === undefined || result.data.product_id === undefined) {
+        throw new Error(`failed to schedule the trip_id: ${trip._id}`, result.data)
+      } else {
+        console.log(`Scheduled trip - trip_id:${trip._id}, request_id:${result.data.request_id}, product_id:${result.data.product_id}`)
+      }
+    } catch (e) {
+      console.log('uber requestPickup requests', e.response.data)
+      throw e
+    }
+    return true
   },
   getEstimate: async (startLng, startLat, endLng, endLat, sessionID) => {
     let result = null

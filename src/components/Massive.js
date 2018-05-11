@@ -11,7 +11,7 @@ class Massive extends Component {
           <div className='card bg-dark text-white'>
             <img className='card-img' src={massiveImage} alt='Date Nite App Banner created by John Saterfiel' />
             <div className='card-img-overlay banner'>
-              {this.props.code !== '' ? (
+              {!this.props.sessionID ? (
                 <Link to='sign-up' className='btn btn-primary'>Sign in/Sign up</Link>
               ) : (
                 <Link to='create-date' className='btn btn-primary'>Create A Date</Link>

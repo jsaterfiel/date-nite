@@ -12,21 +12,6 @@ const DB = {
     return null
   },
   findTrips: async () => {
-    /**
-     * Trip example data structure
-     * _id : "5af4fb374020059977c7fcaf"
-     *  loc_id: "24202"
-     *  user_id: "2491f6b5-3e08-406b-87aa-a645ca64bc7b"
-     *  trip_time: 123412341234
-     *  active: true
-     *  scheduled: false
-     *  people: 2
-     *  location: Object
-     *    type: "Point"
-     *    coordinates: Array
-     *      0: 42.12351
-     *      1: -90.12341
-     */
     const dbo = await DB.getConnection()
     let trips = null
     let data = null
@@ -44,11 +29,12 @@ const DB = {
       }
     }
     try {
-      data = await trips.find({
-        trip_time: {$gte: tripStart, $lt: tripEnd},
+      const params = {
+        startTime: {$gte: tripStart.getTime(), $lt: tripEnd.getTime()},
         active: true,
         scheduled: false
-      })
+      }
+      data = await trips.find(params)
     } catch (e) {
       console.log('db getLocation findById', e)
       throw e
@@ -56,6 +42,28 @@ const DB = {
       try { dbo.close() } catch (e) { }
     }
     return data
+  },
+  tripScheduled: async id => {
+    const dbo = await DB.getConnection()
+    let trips = null
+    try {
+      trips = await dbo.collection('trips')
+    } catch (e) {
+      console.log('db tripScheduled get collection', e)
+      throw e
+    } finally {
+      if (trips === null) {
+        try { dbo.close() } catch (e) { }
+      }
+    }
+    try {
+      await trips.updateById(id, {$set: {scheduled: true}})
+    } catch (e) {
+      console.log('db tripScheduled updateById', e)
+      throw e
+    } finally {
+      try { dbo.close() } catch (e) { }
+    }
   },
   getLocation: async id => {
     const dbo = await DB.getConnection()
@@ -88,7 +96,7 @@ const DB = {
     try {
       users = await dbo.collection('users')
     } catch (e) {
-      console.log('db createUser get collection', e)
+      console.log('db getUser get collection', e)
       throw e
     } finally {
       if (users === null) {
@@ -98,7 +106,7 @@ const DB = {
     try {
       data = await users.findById(id)
     } catch (e) {
-      console.log('db createUser findById', e)
+      console.log('db getUser findById', e)
       throw e
     } finally {
       try { dbo.close() } catch (e) { }

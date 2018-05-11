@@ -8,7 +8,7 @@ import Moment from 'moment'
 import 'react-datepicker/dist/react-datepicker.css'
 import '../styles/create_date_header.css'
 
-const COUNT = [2, 3, 4, 5, 6, 7, 8]
+const COUNT = [2, 3, 4]
 // const DEFAULT_COUNT = 2
 
 class CreateDateHeader extends Component {

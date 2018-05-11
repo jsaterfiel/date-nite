@@ -9,7 +9,21 @@ apiInstance.interceptors.request.use((config) => {
 })
 
 const API = {
-  saveDate: async (locID, pickupLng, pickupLat, startTime) => {
+  saveDate: async (session, locID, pickupLng, pickupLat, startTime, people) => {
+    let result
+    try {
+      result = await apiInstance.post('api/trips/save', {
+        session: session,
+        locID: locID,
+        pickupLng: pickupLng,
+        pickupLat: pickupLat,
+        startTime: startTime, // timestamp
+        people: people
+      })
+    } catch (e) {
+      return false
+    }
+    return result.data
   },
   signUp: async accessCode => {
     let result

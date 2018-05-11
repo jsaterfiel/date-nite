@@ -76,7 +76,7 @@ const API = {
 
   getEstimate: async (startLng, startLat, endLng, endLat, sessionID) => {
     let result = null
-    let carID = null
+    let car = null
     let pickupTime = null
     let priceRange = null
 
@@ -93,9 +93,9 @@ const API = {
         },
         headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}
       })
-      for (let car of result.data.products) {
-        if (car.product_group === 'uberx') {
-          carID = car.product_id
+      for (let product of result.data.products) {
+        if (product.product_group === 'uberx') {
+          car = product
         }
       }
     } catch (e) {
@@ -103,8 +103,12 @@ const API = {
       throw new Error('Error with request')
     }
 
-    if (carID === null) {
-      throw new Error('No uberx found')
+    if (car === null) {
+      if (result.data.products.length > 0) {
+        car = result.data.products[0]
+      } else {
+        throw new Error('No uber found')
+      }
     }
 
     // get time estimate for pickup
@@ -113,7 +117,7 @@ const API = {
         params: {
           start_longitude: startLng,
           start_latitude: startLat,
-          product_id: carID
+          product_id: car.product_id
         },
         headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}
       })
@@ -138,13 +142,13 @@ const API = {
           start_latitude: startLat,
           end_longitude: endLng,
           end_latitude: endLat,
-          product_id: carID
+          product_id: car.product_id
         },
         headers: {common: {'Authorization': 'Bearer ' + user.token.access_token}}
       })
       if (result.data.prices.length > 0) {
         for (let price of result.data.prices) {
-          if (price.product_id === carID) {
+          if (price.product_id === car.product_id) {
             priceRange = price.estimate
           }
         }
@@ -154,7 +158,9 @@ const API = {
       throw new Error('Error with request')
     }
     const output = {
-      productID: carID,
+      productID: car.product_id,
+      productImage: car.image,
+      productName: car.display_name,
       pickupTime: pickupTime,
       estimate: priceRange
     }
