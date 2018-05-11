@@ -1,7 +1,7 @@
-import React from "react";
-import Config from "../config";
-import GoogleMapLoader from "./GoogleMapsLoader";
-import GoogleMap from "./GoogleMap";
+import React from 'react'
+import Config from '../config'
+import GoogleMapLoader from './GoogleMapsLoader'
+import GoogleMap from './GoogleMap'
 
 export default () => {
   return (
@@ -9,24 +9,24 @@ export default () => {
       <GoogleMapLoader
         params={{
           key: Config.GoogleConfig.API_KEY,
-          libraries: "places,geometry"
+          libraries: 'places,geometry'
         }}
         render={(googleMaps, error) =>
           googleMaps ? (
-            <div style={{ height: "300px" }}>
+            <div style={{ height: '300px' }}>
               {error && error}
               <GoogleMap
                 googleMaps={googleMaps}
                 coordinates={[
                   {
-                    title: "Toulouse",
+                    title: 'Toulouse',
                     position: {
                       lat: 43.604363,
                       lng: 1.443363
                     },
                     onLoaded: (googleMaps, map, marker) => {
                       // Set Marker animation
-                      marker.setAnimation(googleMaps.Animation.BOUNCE);
+                      marker.setAnimation(googleMaps.Animation.BOUNCE)
 
                       // Define Marker InfoWindow
                       const infoWindow = new googleMaps.InfoWindow({
@@ -40,24 +40,24 @@ export default () => {
                             </div>
                           </div>
                         `
-                      });
+                      })
 
                       // Open InfoWindow when Marker will be clicked
-                      googleMaps.event.addListener(marker, "click", () => {
-                        infoWindow.open(map, marker);
-                      });
+                      googleMaps.event.addListener(marker, 'click', () => {
+                        infoWindow.open(map, marker)
+                      })
 
                       // // Change icon when Marker will be hovered
-                      // googleMaps.event.addListener(marker, "mouseover", () => {
-                      //   marker.setIcon(iconMarkerHover);
-                      // });
+                      // googleMaps.event.addListener(marker, 'mouseover', () => {
+                      //   marker.setIcon(iconMarkerHover)
+                      // })
 
-                      // googleMaps.event.addListener(marker, "mouseout", () => {
-                      //   marker.setIcon(iconMarker);
-                      // });
+                      // googleMaps.event.addListener(marker, 'mouseout', () => {
+                      //   marker.setIcon(iconMarker)
+                      // })
 
                       // Open InfoWindow directly
-                      infoWindow.open(map, marker);
+                      infoWindow.open(map, marker)
                     }
                   }
                 ]}
@@ -67,11 +67,11 @@ export default () => {
             </div>
           ) : (
             <div>
-              {error === "Network Error" ? <p>{error}</p> : <p>isLoading...</p>}
+              {error === 'Network Error' ? <p>{error}</p> : <p>isLoading...</p>}
             </div>
           )
         }
       />
     </div>
-  );
-};
+  )
+}

@@ -1,34 +1,34 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import CreateDateHeader from "../components/CreateDateHeader";
-import Footer from "../components/Footer";
-import YelpInfo from "../components/YelpInfo";
-import SearchLocation from "../components/SearchLocation";
-import GoogleMapContainer from "../components/GoogleMapsContainer";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import CreateDateHeader from '../components/CreateDateHeader'
+import Footer from '../components/Footer'
+import YelpInfo from '../components/YelpInfo'
+import SearchLocation from '../components/SearchLocation'
+import GoogleMapContainer from '../components/GoogleMapsContainer'
 
 class CreateDate extends Component {
   state = {
     showGoogle: false
-  };
-
-  componentDidMount() {
-    console.log("component mounted");
   }
 
-  componentWillReceiveProps(newProps) {
-    console.log("will receive props");
+  componentDidMount () {
+    console.log('component mounted')
   }
 
-  handleSearch(e) {
+  componentWillReceiveProps (newProps) {
+    console.log('will receive props')
+  }
+
+  handleSearch (e) {
     this.setState((prevState, prevProps) => {
-      return { showGoogle: !prevState.showGoogle };
-    });
+      return { showGoogle: !prevState.showGoogle }
+    })
   }
-  render() {
+  render () {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col">
+      <div className='container'>
+        <div className='row'>
+          <div className='col'>
             <CreateDateHeader />
           </div>
         </div>
@@ -36,21 +36,21 @@ class CreateDate extends Component {
 
         {
           //    this.state.showGoogle && (
-          <div className="row">
+          <div className='row'>
             <GoogleMapContainer />
           </div>
           // )
         }
-        <div className="row">
+        <div className='row'>
           <YelpInfo />
         </div>
         <Footer />
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = state => {
-  return state.general;
-};
-export default connect(mapStateToProps)(CreateDate);
+  return state.general
+}
+export default connect(mapStateToProps)(CreateDate)

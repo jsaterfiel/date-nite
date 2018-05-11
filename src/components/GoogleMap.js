@@ -1,27 +1,27 @@
-import PropTypes from "prop-types"
-import React from "react"
+import PropTypes from 'prop-types'
+import React from 'react'
 
 const inlineStyles = {
-  position: "relative",
-  overflow: "hidden",
-  height: "100%",
-  width: "100%",
+  position: 'relative',
+  overflow: 'hidden',
+  height: '100%',
+  width: '100%'
 }
 
 class GoogleMap extends React.Component {
-  constructor() {
+  constructor () {
     super()
     this.state = {
       map: null,
-      markers: new Map(),
+      markers: new Map()
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     const {coordinates, googleMaps, onLoaded, ...props} = this.props
 
     const map = new googleMaps.Map(this.ref_map, {
-      ...props,
+      ...props
     })
 
     this.setState({map}, () => {
@@ -33,7 +33,7 @@ class GoogleMap extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     const newMarkers = nextProps.coordinates.some(
       coordinate => !this.state.markers.has(this.getMarkerId(coordinate))
     )
@@ -53,15 +53,15 @@ class GoogleMap extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate (nextProps, nextState) {
     return JSON.stringify(this.props.coordinates) !== JSON.stringify(nextProps.coordinates)
   }
 
-  getMarkerId(coordinate) {
-    return coordinate.position.lat + "_" + coordinate.position.lng
+  getMarkerId (coordinate) {
+    return coordinate.position.lat + '_' + coordinate.position.lng
   }
 
-  removeOldMarkers(coordinates) {
+  removeOldMarkers (coordinates) {
     const {markers} = this.state
     const {autoFitBounds} = this.props
 
@@ -83,7 +83,7 @@ class GoogleMap extends React.Component {
     }
   }
 
-  addNewMarkers(coordinates) {
+  addNewMarkers (coordinates) {
     const {markers} = this.state
     const {autoFitBounds} = this.props
 
@@ -101,14 +101,14 @@ class GoogleMap extends React.Component {
     }
   }
 
-  addMarker(markerId, coordinate) {
+  addMarker (markerId, coordinate) {
     const {map} = this.state
     const {googleMaps} = this.props
     const {onLoaded, ...markerProps} = coordinate
 
     const marker = new googleMaps.Marker({
       map: map,
-      ...markerProps,
+      ...markerProps
     })
 
     if (onLoaded) {
@@ -118,7 +118,7 @@ class GoogleMap extends React.Component {
     return marker
   }
 
-  fitBounds() {
+  fitBounds () {
     const {map, markers} = this.state
     const {boundsOffset, googleMaps} = this.props
 
@@ -150,7 +150,7 @@ class GoogleMap extends React.Component {
     map.fitBounds(bounds)
   }
 
-  render() {
+  render () {
     return <div ref={ref => (this.ref_map = ref)} style={inlineStyles} />
   }
 }
@@ -160,18 +160,18 @@ GoogleMap.propTypes = {
   boundsOffset: PropTypes.number,
   coordinates: PropTypes.arrayOf(
     PropTypes.shape({
-      onLoaded: PropTypes.func,
+      onLoaded: PropTypes.func
     })
   ),
   googleMaps: PropTypes.object.isRequired,
-  onLoaded: PropTypes.func,
+  onLoaded: PropTypes.func
 }
 
 GoogleMap.defaultProps = {
   autoFitBounds: false,
   boundsOffset: 0.002,
   coordinates: [],
-  onLoaded: null,
+  onLoaded: null
 }
 
 export default GoogleMap
