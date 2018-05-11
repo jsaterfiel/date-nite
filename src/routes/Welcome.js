@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { push } from 'react-router-redux'
 import Footer from '../components/Footer'
 import Massive from '../components/Massive'

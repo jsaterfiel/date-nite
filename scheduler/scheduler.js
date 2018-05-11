@@ -1,35 +1,31 @@
-const bluebird = require('bluebird')
-const redis = require('redis')
+const db = require('./services/db')
+const uber = require('./services/uber')
 
-bluebird.promisifyAll(redis.RedisClient.prototype)
-bluebird.promisifyAll(redis.Multi.prototype)
-
-const subscriber = redis.createClient()
-const client = redis.createClient()
-
-const redisRequestChannel = 'request_channel'
-
-subscriber.on('message', async (channel, msg) => {
-  const request = JSON.parse(msg)
-  let response = {success: false, results: []}
-  try {
-    // TODO: call uber
-    response.results = {hello: 'world'}
-    response.message = request.data.message
-    response.username = request.data.username
-    response.success = true
-  } catch (err) {
-    response.success = false
-    response.err_msg = err.message
+const Scheduler = {
+  checkTrips: () => {
+    const promise = db.findTrips()
+    promise.then(async (trips) => {
+      for (let trip of trips) {
+        const user = await db.getUser(trip.userID)
+        const loc = await db.getLocation(trip.locID)
+        try {
+          await uber.requestPickup(user, loc, trip)
+          await db.tripScheduled(trip._id)
+        } catch (e) {
+          console.log(e)
+        }
+      }
+      Scheduler.repeat()
+    }).catch(reason => {
+      console.log('error checkTrips', reason)
+      Scheduler.repeat()
+    })
+  },
+  repeat: () => {
+    setTimeout(Scheduler.checkTrips, 60000)
   }
-  await client.publishAsync(request.channel, JSON.stringify(response))
-})
-
-subscriber.on('error', async (channel, msg) => {
-  await subscriber.unsubscribeAsync()
-  await subscriber.quitAsync()
-})
-
-subscriber.subscribeAsync(redisRequestChannel)
+}
 
 console.log('SCHEDULER RUNNING')
+
+Scheduler.checkTrips()

@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { setDateAndCount } from '../store/actions/action_date_count'
 import DatePicker from 'react-datepicker'
 import Moment from 'moment'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import '../styles/create_date_header.css'
 
-const COUNT = [2, 3, 4, 5, 6, 7, 8]
-const DEFAULT_COUNT = 2
+const COUNT = [2, 3, 4]
+// const DEFAULT_COUNT = 2
 
 class CreateDateHeader extends Component {
   constructor (props) {
@@ -15,8 +17,7 @@ class CreateDateHeader extends Component {
 
     this.state = {
       currentDate: Moment(),
-      selectedDate: null,
-      count: DEFAULT_COUNT
+      selectedDate: null
     }
   }
 
@@ -27,15 +28,13 @@ class CreateDateHeader extends Component {
   }
 
   onSelectCountChange = (newCount) => {
-    this.setState({
-      count: newCount
-    })
+    const currentDate = this.props.dateAndCount.dateTime
+    this.props.onDateAndCountChange({count: newCount, dateTime: currentDate})
   }
 
   onSelectDateChange = (date) => {
-    this.setState({
-      selectedDate: date
-    })
+    const currentCount = this.props.dateAndCount.count
+    this.props.onDateAndCountChange({count: currentCount, dateTime: date})
   }
 
   render () {
@@ -49,10 +48,10 @@ class CreateDateHeader extends Component {
                 {this.countOptions()}
               </div>
             </div>
-            <input type='text' onChange={(value) => this.setState({count: value})} value={this.state.count} className='form-control count-text' aria-label='Text input with dropdown button' />
+            <input type='text' onChange={e => this.onSelectCountChange(e.target.value)} value={this.props.dateAndCount.count} className='form-control count-text' aria-label='Text input with dropdown button' />
           </div>
           <DatePicker className='custom-datepicker' id='dateWhen'
-            minDate={this.state.currentDate} selected={this.state.selectedDate}
+            minDate={this.state.currentDate} selected={this.props.dateAndCount.dateTime}
             showTimeSelect
             dateFormat='LLL'
             timeFormat='h:mm a'
@@ -67,6 +66,14 @@ class CreateDateHeader extends Component {
 }
 
 const mapStateToProps = state => {
-  return state.general
+  return {
+    dateAndCount: state.dateAndCount,
+    general: state.general
+  }
 }
-export default connect(mapStateToProps)(CreateDateHeader)
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ onDateAndCountChange: setDateAndCount }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateDateHeader)

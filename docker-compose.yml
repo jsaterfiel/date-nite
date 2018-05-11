@@ -3,6 +3,12 @@ services:
   redis:
    image: redis
    command: ["redis-server", "--protected-mode", "no", "--appendonly", "yes"]
+  mongo-custom:
+   build:
+    context: .
+    dockerfile: "./docker_files/mongo-custom/Dockerfile"
+   ports:
+    - "27017:27017"
 
   client:
    build:
@@ -37,10 +43,3 @@ services:
      - mongo-custom
    volumes:
      - "./scheduler:/app/scheduler"
-    
-  mongo-custom:
-   build:
-    context: .
-    dockerfile: "./docker_files/mongo-custom/Dockerfile"
-   ports:
-    - "27017:27017"

@@ -33,7 +33,7 @@ class GoogleMap extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     const newMarkers = nextProps.coordinates.some(
       coordinate => !this.state.markers.has(this.getMarkerId(coordinate))
     );

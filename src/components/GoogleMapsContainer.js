@@ -1,7 +1,7 @@
-import React from "react";
-import Config from "../config";
-import GoogleMapLoader from "./GoogleMapsLoader";
-import GoogleMap from "./GoogleMap";
+import React from 'react'
+import Config from '../config'
+import GoogleMapLoader from './GoogleMapsLoader'
+import GoogleMap from './GoogleMap'
 
 export default () => {
   return (
@@ -9,11 +9,11 @@ export default () => {
       <GoogleMapLoader
         params={{
           key: Config.GoogleConfig.API_KEY,
-          libraries: "places,geometry"
+          libraries: 'places,geometry'
         }}
         render={(googleMaps, error) =>
           googleMaps ? (
-            <div style={{ height: "300px", width: "100%" }}>
+            <div style={{ height: '300px',width:'100%' }}>
               {error && error}
               <GoogleMap
                 googleMaps={googleMaps}
@@ -65,9 +65,9 @@ export default () => {
                       });
 
                       // Open InfoWindow when Marker will be clicked
-                      googleMaps.event.addListener(marker, "click", () => {
-                        infoWindow.open(map, marker);
-                      });
+                      googleMaps.event.addListener(marker, 'click', () => {
+                        infoWindow.open(map, marker)
+                      })
 
                       // // Change icon when Marker will be hovered
                       googleMaps.event.addListener(marker, "mouseover", () => {
@@ -91,11 +91,11 @@ export default () => {
             </div>
           ) : (
             <div>
-              {error === "Network Error" ? <p>{error}</p> : <p>isLoading...</p>}
+              {error === 'Network Error' ? <p>{error}</p> : <p>isLoading...</p>}
             </div>
           )
         }
       />
     </div>
-  );
-};
+  )
+}

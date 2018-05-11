@@ -49,7 +49,7 @@ const DB = {
     try {
       users = await dbo.collection('users')
     } catch (e) {
-      console.log('db createUser get collection', e)
+      console.log('db getUser get collection', e)
       throw e
     } finally {
       if (users === null) {
@@ -59,12 +59,46 @@ const DB = {
     try {
       data = await users.findById(id)
     } catch (e) {
-      console.log('db createUser findById', e)
+      console.log('db getUser findById', e)
       throw e
     } finally {
       try { dbo.close() } catch (e) { }
     }
     return data
+  },
+  saveTrip: async (userID, pickupLng, pickupLat, locID, startTime, people) => {
+    const dbo = await DB.getConnection()
+    let trips = null
+    try {
+      trips = await dbo.collection('trips')
+    } catch (e) {
+      console.log('db createUser get collection', e)
+      throw e
+    } finally {
+      if (trips === null) {
+        try { dbo.close() } catch (e) { }
+      }
+    }
+
+    try {
+      await trips.insert({
+        userID: userID,
+        locID: locID,
+        startTime: startTime,
+        people: people,
+        active: true,
+        scheduled: false,
+        location: {
+          type: 'Point',
+          coordinates: [pickupLng, pickupLat]
+        }
+      })
+    } catch (e) {
+      console.log('db saveTrip insert', e)
+      throw e
+    } finally {
+      try { dbo.close() } catch (e) { }
+    }
   },
   getLocation: async id => {
     const dbo = await DB.getConnection()

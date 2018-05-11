@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const uberService = require('./services/uber')
 const Yelp = require('./services/yelp_api')
 const loc = require('./services/locations')
+const tripsService = require('./services/trips')
 
 const app = express()
 
@@ -19,6 +20,41 @@ app.use((req, res, next) => {
 app.get('/api', async (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   res.send(JSON.stringify({ hello: 'world' }))
+})
+
+// save date trip
+app.post('/api/date/save', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+
+  // get all params
+  const sessionID = req.body.session
+  const pickupLng = req.body.pickupLng
+  const pickupLat = req.body.pickupLat
+  const locID = req.body.locID
+  const startTime = req.body.startTime
+  const people = req.body.people
+
+  if (sessionID === undefined || pickupLng === undefined || pickupLat === undefined || locID === undefined || startTime === undefined || people === undefined) {
+    console.log(sessionID, pickupLng, pickupLat, locID, startTime, people)
+    res.status(500)
+    res.send(JSON.stringify({ error: 'Missing parameter.  Parameters are: session, pickupLng, pickupLat, locID, startTime, people' }))
+    return
+  }
+
+  const user = await uberService.getUser(sessionID)
+  if (user === false) {
+    res.status(500)
+    res.send(JSON.stringify({ error: 'Invalid User' }))
+    return
+  }
+  try {
+    await tripsService.saveTrip(user._id, pickupLng, pickupLat, locID, startTime, people)
+  } catch (e) {
+    res.status(500)
+    res.send(JSON.stringify({ error: e.message }))
+    return
+  }
+  res.send(JSON.stringify({success: true}))
 })
 
 // handle oauth2 redirect from uber

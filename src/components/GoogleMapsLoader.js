@@ -1,29 +1,29 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import loadGoogleMapsSdk from "../utils/loadGoogleMapSdk";
+import loadGoogleMapsSdk from '../utils/loadGoogleMapSdk'
 
 class GoogleMapsLoader extends React.Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
 
     this.state = {
       googleMaps: null,
       error: null
-    };
+    }
   }
 
-  componentDidMount() {
-    const { params } = this.props;
+  componentDidMount () {
+    const { params } = this.props
     loadGoogleMapsSdk(params, ({ googleMaps, error }) =>
       this.setState({ googleMaps, error })
-    );
+    )
   }
 
-  render() {
-    const { googleMaps, error } = this.state;
-    const { render } = this.props;
-    return render(googleMaps, error);
+  render () {
+    const { googleMaps, error } = this.state
+    const { render } = this.props
+    return render(googleMaps, error)
   }
 }
 
@@ -33,6 +33,6 @@ GoogleMapsLoader.propTypes = {
     libraries: PropTypes.string
   }).isRequired,
   render: PropTypes.func.isRequired
-};
+}
 
-export default GoogleMapsLoader;
+export default GoogleMapsLoader
