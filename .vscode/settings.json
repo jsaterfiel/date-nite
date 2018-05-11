@@ -5,7 +5,7 @@
   "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
   "editor.detectIndentation": false,
   "workbench.startupEditor": "newUntitledFile",
-  "window.zoomLevel": 0,
+  "window.zoomLevel": 2,
   "files.autoSave": "afterDelay",
   "window.openFoldersInNewWindow": "on",
   "git.autofetch": true,

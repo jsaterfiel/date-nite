@@ -21,10 +21,10 @@ class Welcome extends Component {
             </ul>
             <h2>Data Integrations</h2>
             <ul>
-              <li><a target='_blank' href='https://www.uber.com'>Uber&trade;</a></li>
-              <li><a target='_blank' href='https://www.opentable.com'>OpenTable&trade;</a> data via heroku app created by <a target='_blank' href='https://gist.github.com/andrewonj/3531613'>adrewonj</a></li>
-              <li><a target='_blank' href='https://developers.google.com/maps/documentation/javascript/tutorial'>Google&trade; Maps</a></li>
-              <li><a target='_blank' href='https://www.yelp.com'>Yelp&trade;</a></li>
+              <li><a target='_blank' rel='noopener noreferrer' href='https://www.uber.com'>Uber&trade;</a></li>
+              <li><a target='_blank' rel='noopener noreferrer' href='https://www.opentable.com'>OpenTable&trade;</a> data via heroku app created by <a target='_blank' rel='noopener noreferrer' href='https://gist.github.com/andrewonj/3531613'>adrewonj</a></li>
+              <li><a target='_blank' rel='noopener noreferrer' href='https://developers.google.com/maps/documentation/javascript/tutorial'>Google&trade; Maps</a></li>
+              <li><a target='_blank' rel='noopener noreferrer' href='https://www.yelp.com'>Yelp&trade;</a></li>
             </ul>
           </div>
         </div>

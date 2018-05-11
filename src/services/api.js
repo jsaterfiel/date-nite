@@ -40,8 +40,20 @@ const API = {
     try {
       await apiInstance.delete(`api/trips/${tripID}?session=${sessionID}`)
     } catch (e) {
-      console.log('error', e.message)
+      console.log('error api cancelTrip', e.message)
       return false
+    }
+  },
+  searchLocations: async (lng, lat, radius, price) => {
+    const lngStr = encodeURIComponent(lng)
+    const latStr = encodeURIComponent(lat)
+    const radiusStr = encodeURIComponent(radius)
+    const priceStr = encodeURIComponent(price)
+    try {
+      const results = await apiInstance.get(`api/locations/search/${lngStr}/${latStr}/${radiusStr}/${priceStr}`)
+      return results.data
+    } catch (e) {
+      console.log('error api searchLocations')
     }
   },
   signUp: async accessCode => {
@@ -58,6 +70,21 @@ const API = {
       await apiInstance.get('api/logout?session=' + encodeURIComponent(session))
     } catch (e) {
       throw e
+    }
+  },
+  getBusinessInfo: async (info) => {
+    let response
+    try {
+      response = await apiInstance.get('api/yelp/businesses/match', {
+        params: info
+      })
+      const businessId = response.data.businesses[0].id
+      response = await apiInstance.get(`api/yelp/businesses/${businessId}`, {
+        params: info
+      })
+      return response.data
+    } catch (e) {
+      console.log('api getBusinessInfo', e)
     }
   }
 }

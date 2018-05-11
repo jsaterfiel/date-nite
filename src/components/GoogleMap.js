@@ -9,8 +9,8 @@ const inlineStyles = {
 }
 
 class GoogleMap extends React.Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = {
       map: null,
       markers: new Map()
@@ -51,6 +51,7 @@ class GoogleMap extends React.Component {
     if (newMarkers) {
       this.addNewMarkers(nextProps.coordinates)
     }
+    this.state.map.setCenter(nextProps.center)
   }
 
   shouldComponentUpdate (nextProps, nextState) {

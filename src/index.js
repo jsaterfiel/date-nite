@@ -13,11 +13,7 @@ import reducers from './store/reducers' // Or wherever you keep your reducers
 import registerServiceWorker from './registerServiceWorker'
 import './index.css'
 
-// import 'bootstrap/dist/css/bootstrap.css'
 import App from './App'
-
-// window.jQuery = jquery
-// require('bootstrap')
 
 // Create a history of your choosing (we're using a browser history in this case)
 const history = createHistory()

@@ -41,6 +41,7 @@ class CreateDateHeader extends Component {
     return (
       <div className='create-date-header'>
         <div className='create-date-nav navbar navbar-dark bg-dark'>
+          <div className='container'><h1 class='text-light'>Create Date</h1></div>
           <div className='input-group mb-3 count-container'>
             <div className='input-group-prepend'>
               <button className='btn btn-outline-info dropdown-toggle' type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Count</button>

@@ -16,7 +16,8 @@ const YelpConfig = {
 
 const GoogleConfig = {
   API_KEY: 'AIzaSyA4kiE6M-jBsMPtbgu-EsNlaoJulveWitg',
-  API_URL: 'https://maps.googleapis.com/maps/api/js'
+  API_URL: 'https://maps.googleapis.com/maps/api/js',
+  API_URL_PREFIX: 'https://maps.google.com/maps/api/'
 }
 
 const PORT = 3000

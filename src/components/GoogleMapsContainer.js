@@ -1,128 +1,80 @@
-import Config from "../config";
-import GoogleMapLoader from "./GoogleMapsLoader";
-import GoogleMap from "./GoogleMap";
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { getLocations } from "../store/actions/action_location";
+import Config from '../config'
+import GoogleMapLoader from './GoogleMapsLoader'
+import GoogleMap from './GoogleMap'
+import { searchLocations } from '../store/actions'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import API from '../services/api'
 
 class GoogleMapsContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      locations: []
-    };
+  componentDidMount = async () => {
+    await this.props.searchLocations(this.props.mapCenter.lng, this.props.mapCenter.lat, 10000, 3)
   }
 
-  componentDidMount() {
-    const locDetails = {
-      lat: "40.74399",
-      lng: "-74.03236",
-      radius: "25",
-      pricenum: "4"
-    };
-    // trying to trigger aaction here
-    this.props.getLocations(locDetails);
-  }
+  render () {
+    let coords = []
+    for (let loc of this.props.locations) {
+      coords.push({
+        title: loc.name,
+        position: {
+          lng: loc.location.coordinates[0],
+          lat: loc.location.coordinates[1]
+        },
+        onLoaded: (googleMaps, map, marker) => {
+          // Open InfoWindow when Marker will be clicked
+          googleMaps.event.addListener(marker, 'click', async () => {
+            let biz = await API.getBusinessInfo({
+              name: loc.name,
+              longitude: loc.location.coordinates[0],
+              latitude: loc.location.coordinates[1],
+              city: loc.city,
+              state: loc.state
+            })
+            console.log(biz)
+            if (biz === undefined) {
+              biz = {
+                url: loc.reserve_url,
+                rating: '?',
+                review_count: '???'
+              }
+            }
+            if (biz.price === undefined) {
+              biz.price = '$$'
+            }
+            const infoWindow = new googleMaps.InfoWindow({
+              content:
+            `<div style='width:200px'><h1 class='h6'><a target='_blank' rel='noopener noreferrer' href='${biz.url}'>${loc.name}</a></h1><p><b>price:</b> ${biz.price}<br><b>ratings:</b> ${biz.rating}/5&nbsp;&nbsp;<b>review:</b> ${biz.review_count}<br/></p><img src='${loc.image_url}'><p style='padding-top:10px'><button class='btn btn-primary'>Pick Restaurant</button></p></div>`
+            })
+            infoWindow.open(map, marker)
+          })
 
-  render() {
-    const { locations } = this.props.getLoc;
+          // Open InfoWindow directly
+          // infoWindow.open(map, marker)
+        }
+      })
+    }
+    const centerLoc = { lat: this.props.mapCenter.lat, lng: this.props.mapCenter.lng }
     return (
       <div>
         <GoogleMapLoader
           params={{
             key: Config.GoogleConfig.API_KEY,
-            libraries: "places,geometry"
+            libraries: 'places,geometry'
           }}
           render={(googleMaps, error) =>
             googleMaps ? (
-              <div style={{ height: "300px", width: "100%" }}>
+              <div style={{ height: '500px', width: '100%' }}>
                 {error && error}
                 <GoogleMap
                   googleMaps={googleMaps}
-                  coordinates={[
-                    {
-                      title: "Hoboken",
-                      position: {
-                        lat: 40.74399,
-                        lng: -74.03236
-                      },
-                      onLoaded: (googleMaps, map, marker) => {
-                        // Define Marker InfoWindow
-                        const infoWindow = new googleMaps.InfoWindow({
-                          content:
-                            "<div><h2> Panera Bread </h2><p> Famous for healthy Food</p><button>Book It</button><button>Details</button> </div>"
-                        });
-
-                        // Open InfoWindow when Marker will be clicked
-                        googleMaps.event.addListener(marker, "click", () => {
-                          infoWindow.open(map, marker);
-                        });
-
-                        // // Change icon when Marker will be hovered
-                        googleMaps.event.addListener(
-                          marker,
-                          "mouseover",
-                          () => {
-                            marker.setIcon(
-                              "http://maps.google.com/mapfiles/marker_green.png"
-                            );
-                          }
-                        );
-
-                        googleMaps.event.addListener(marker, "mouseout", () => {
-                          marker.setIcon();
-                        });
-
-                        // Open InfoWindow directly
-                        // infoWindow.open(map, marker)
-                      }
-                    },
-                    {
-                      title: "Carlo's Bakery",
-                      position: {
-                        lat: 40.7372,
-                        lng: -74.0308
-                      },
-                      onLoaded: (googleMaps, map, marker) => {
-                        // Define Marker InfoWindow
-                        const infoWindow = new googleMaps.InfoWindow({
-                          content:
-                            "<div><h2> Carlos Bakery </h2><p> Delicious Cake</p><button>Book It</button><button>Details</button> </div>"
-                        });
-
-                        // Open InfoWindow when Marker will be clicked
-                        googleMaps.event.addListener(marker, "click", () => {
-                          infoWindow.open(map, marker);
-                        });
-
-                        // // Change icon when Marker will be hovered
-                        googleMaps.event.addListener(
-                          marker,
-                          "mouseover",
-                          () => {
-                            marker.setIcon(
-                              "http://maps.google.com/mapfiles/marker_green.png"
-                            );
-                          }
-                        );
-
-                        googleMaps.event.addListener(marker, "mouseout", () => {
-                          marker.setIcon();
-                        });
-
-                        // Open InfoWindow directly
-                        // infoWindow.open(map, marker)
-                      }
-                    }
-                  ]}
-                  center={{ lat: 40.74399, lng: -74.03236 }}
-                  zoom={12}
+                  coordinates={coords}
+                  center={centerLoc}
+                  zoom={13}
                 />
               </div>
             ) : (
               <div>
-                {error === "Network Error" ? (
+                {error === 'Network Error' ? (
                   <p>{error}</p>
                 ) : (
                   <p>isLoading...</p>
@@ -132,12 +84,17 @@ class GoogleMapsContainer extends Component {
           }
         />
       </div>
-    );
+    )
   }
 }
 const mapStateToProps = state => {
+  return state.general
+}
+const mapDispatchToProps = dispatch => {
   return {
-    getLoc: state.getLoc
-  };
-};
-export default connect(mapStateToProps, { getLocations })(GoogleMapsContainer);
+    searchLocations: (lng, lat, radius, price) => {
+      dispatch(searchLocations(lng, lat, radius, price))
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(GoogleMapsContainer)

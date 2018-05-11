@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 import loadGoogleMapsSdk from '../utils/loadGoogleMapSdk'
 
 class GoogleMapsLoader extends React.Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
 
     this.state = {
       googleMaps: null,
