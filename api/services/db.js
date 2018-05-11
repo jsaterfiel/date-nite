@@ -100,6 +100,52 @@ const DB = {
       try { dbo.close() } catch (e) { }
     }
   },
+  cancelTrip: async id => {
+    const dbo = await DB.getConnection()
+    let trips = null
+    try {
+      trips = await dbo.collection('trips')
+    } catch (e) {
+      console.log('db cancelTrip get collection', e)
+      throw e
+    } finally {
+      if (trips === null) {
+        try { dbo.close() } catch (e) { }
+      }
+    }
+    try {
+      await trips.updateById(id, {$set: {active: false}})
+    } catch (e) {
+      console.log('db cancelTrip updateById', e)
+      throw e
+    } finally {
+      try { dbo.close() } catch (e) { }
+    }
+  },
+  getTrips: async userID => {
+    const dbo = await DB.getConnection()
+    let trips = null
+    let data = null
+    try {
+      trips = await dbo.collection('trips')
+    } catch (e) {
+      console.log('db getTrips get collection', e)
+      throw e
+    } finally {
+      if (trips === null) {
+        try { dbo.close() } catch (e) { }
+      }
+    }
+    try {
+      data = await trips.find({userID: userID, scheduled: false})
+    } catch (e) {
+      console.log('db getTrips find', e)
+      throw e
+    } finally {
+      try { dbo.close() } catch (e) { }
+    }
+    return data
+  },
   getLocation: async id => {
     const dbo = await DB.getConnection()
     let locs = null

@@ -1,9 +1,14 @@
-import { SESSION_SET, CODE_SET, LOCATIONS_SET } from "./constants";
+import { SESSION_SET, CODE_SET, TRIPS_SET, LOCATIONS_SET } from "./constants";
 import Cookies from "../utils/cookies";
-
+import ApiService from "../services/api";
+import { push } from "react-router-redux";
 export const sessionSet = data => {
   return dispatch => {
-    Cookies.setCookie("session", data.sessionID, data.expiresIn);
+    if (data.sessionID === "") {
+      Cookies.setCookie("session", data.sessionID, -1);
+    } else {
+      Cookies.setCookie("session", data.sessionID, data.expiresIn);
+    }
     dispatch({
       type: SESSION_SET,
       sessionID: data.sessionID
@@ -26,5 +31,48 @@ export const locationsSet = locations => {
       type: LOCATIONS_SET,
       payload: locations
     });
+  };
+};
+
+export const getTrips = session => {
+  return dispatch => {
+    ApiService.getTrips(session)
+      .then(trips => {
+        dispatch({
+          type: TRIPS_SET,
+          trips
+        });
+      })
+      .catch(error => {
+        console.log("error", error);
+      });
+  };
+};
+
+export const cancelTrip = (session, id) => {
+  return async dispatch => {
+    try {
+      await ApiService.cancelTrip(session, id);
+      const trips = await ApiService.getTrips(session);
+      dispatch({
+        type: TRIPS_SET,
+        trips
+      });
+    } catch (e) {
+      console.log("error", e.message);
+    }
+  };
+};
+
+export const logout = session => {
+  return async dispatch => {
+    try {
+      await ApiService.logout(session);
+      dispatch(sessionSet({ sessionID: "" }));
+      console.log("hi");
+      dispatch(push("/"));
+    } catch (e) {
+      console.log("error", e.message);
+    }
   };
 };

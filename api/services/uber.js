@@ -32,7 +32,7 @@ const API = {
         'code': accessCode
       }))
     } catch (e) {
-      console.log('token request', e.response.data.error)
+      console.log('uber token request', e.response.data.error)
       return null
     }
     const sessionID = uuid()
@@ -56,7 +56,7 @@ const API = {
     try {
       result = await uberInstance.get('me', {headers: {common: {'Authorization': 'Bearer ' + token}}})
     } catch (e) {
-      console.log('profile request', e.response.data)
+      console.log('uber profile request', e.response.data)
       return null
     }
     return result.data
@@ -69,8 +69,17 @@ const API = {
 
       return JSON.parse(result)
     } catch (e) {
-      console.log('getUser check cache', e)
+      console.log('uber getUser check cache', e)
       return false
+    }
+  },
+
+  logout: async sessionID => {
+    try {
+      await cache.delAsync('session_' + sessionID)
+    } catch (e) {
+      console.log('logout del cache', e)
+      throw new Error('Unable to process request')
     }
   },
 

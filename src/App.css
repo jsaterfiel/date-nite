@@ -3,3 +3,6 @@
   left: inherit !important;
 }
 
+.strikeThrough {
+  text-decoration: line-through;
+}
