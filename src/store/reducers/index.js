@@ -10,5 +10,5 @@ export default combineReducers({
   restaurantDetails: YelpInfo,
   dateAndCount: DateAndCount,
   general,
-  reducer_location
+  getLoc: reducer_location
 });

@@ -1,6 +1,7 @@
 import Config from "../config";
 import GoogleMapLoader from "./GoogleMapsLoader";
 import GoogleMap from "./GoogleMap";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getLocations } from "../store/actions/action_location";
@@ -21,9 +22,11 @@ class GoogleMapsContainer extends Component {
       pricenum: "4"
     };
     // trying to trigger aaction here
+    this.props.getLocations(locDetails);
   }
 
   render() {
+    const { locations } = this.props.getLoc;
     return (
       <div>
         <GoogleMapLoader
@@ -132,4 +135,9 @@ class GoogleMapsContainer extends Component {
     );
   }
 }
-export default connect(null, { getLocations })(GoogleMapsContainer);
+const mapStateToProps = state => {
+  return {
+    getLoc: state.getLoc
+  };
+};
+export default connect(mapStateToProps, { getLocations })(GoogleMapsContainer);
