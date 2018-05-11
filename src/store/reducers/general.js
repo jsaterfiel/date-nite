@@ -4,7 +4,8 @@ import Cookies from '../../utils/cookies'
 let initialState = {
   sessionID: '',
   code: '',
-  trips: []
+  trips: [],
+  tripsCancelled: false
 }
 
 const cookieSessionID = Cookies.getCookie('session')
@@ -31,8 +32,15 @@ export default (state = initialState, action) => {
     }
 
     case TRIPS_SET: {
+      let hasCancelled = false
+      for (let trip of action.trips) {
+        if (trip.active === false) {
+          hasCancelled = true
+        }
+      }
       return {
         ...state,
+        tripsCancelled: hasCancelled,
         trips: action.trips
       }
     }

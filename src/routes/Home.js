@@ -27,8 +27,18 @@ class Home extends Component {
         <Massive />
         <div className='row'>
           <div className='col pt-5'>
-            <h2>Upcoming Date Nites <span className='badge badge-secondary'>{this.props.trips.length}</span></h2>
-            <table className='table table-striped'>
+            <h1>Upcoming Date Nites <span className='badge badge-secondary'>{this.props.trips.length}</span></h1>
+            { this.props.tripsCancelled &&
+              <div>
+                <div className='alert alert-danger'>
+                  <strong>Warning</strong> Due to limitations with our integration with OpenTable&trade; we are not able to delete your reservation.  Please click on the restaurant's name below to be linked over to OpenTable&trade;.
+                </div>
+                <div className='alert alert-warning'>
+                  <strong>Alert</strong> Any Date Nite with a line through it (cancelled) will not be scheduled by Uber&trade;
+                </div>
+              </div>
+            }
+            <table className='table'>
               <thead>
                 <tr>
                   <th scope='col'>Pick Up Time</th>

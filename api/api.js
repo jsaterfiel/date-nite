@@ -27,6 +27,26 @@ app.get('/api', async (req, res) => {
   res.send(JSON.stringify({ hello: 'world' }))
 })
 
+app.get('/api/logout', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+
+  const sessionID = req.query.session
+  if (sessionID === undefined) {
+    res.status(500)
+    res.send(JSON.stringify({ error: 'Missing query parameter.  Parameters are: session' }))
+    return
+  }
+
+  try {
+    await uberService.logout(sessionID)
+  } catch (e) {
+    res.status(500)
+    res.send(JSON.stringify({ error: e.message }))
+    return
+  }
+  res.send(JSON.stringify({ success: true }))
+})
+
 // cancel date trip
 app.delete('/api/trips/:id', async (req, res) => {
   res.setHeader('Content-Type', 'application/json')

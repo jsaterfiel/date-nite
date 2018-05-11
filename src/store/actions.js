@@ -1,10 +1,14 @@
 import { SESSION_SET, CODE_SET, TRIPS_SET } from './constants'
 import Cookies from '../utils/cookies'
 import ApiService from '../services/api'
-
+import { push } from 'react-router-redux'
 export const sessionSet = data => {
   return dispatch => {
-    Cookies.setCookie('session', data.sessionID, data.expiresIn)
+    if (data.sessionID === '') {
+      Cookies.setCookie('session', data.sessionID, -1)
+    } else {
+      Cookies.setCookie('session', data.sessionID, data.expiresIn)
+    }
     dispatch({
       type: SESSION_SET,
       sessionID: data.sessionID
@@ -43,6 +47,19 @@ export const cancelTrip = (session, id) => {
         type: TRIPS_SET,
         trips
       })
+    } catch (e) {
+      console.log('error', e.message)
+    }
+  }
+}
+
+export const logout = (session) => {
+  return async dispatch => {
+    try {
+      await ApiService.logout(session)
+      dispatch(sessionSet({sessionID: ''}))
+      console.log('hi')
+      dispatch(push('/'))
     } catch (e) {
       console.log('error', e.message)
     }

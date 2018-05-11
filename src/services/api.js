@@ -52,6 +52,13 @@ const API = {
       return false
     }
     return result.data
+  },
+  logout: async session => {
+    try {
+      await apiInstance.get('api/logout?session=' + encodeURIComponent(session))
+    } catch (e) {
+      throw e
+    }
   }
 }
 

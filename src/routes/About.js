@@ -11,14 +11,21 @@ class Welcome extends Component {
         <Massive />
         <div className='row'>
           <div className='col'>
-            <div className='card bg-dark text-white'>
-              <img className='card-img' src='http://via.placeholder.com/932x270' alt='Date Nite App User reviews background' />
-              <div className='card-img-overlay'>
-                <p className='card-title'>User Reviews</p>
-                <p className='card-text'>My husband and I used to never be able to organize a date nite and when we did we ended up messing parts of the date up.  With date nite we are able to make a date and stick to it.</p>
-                <p className='card-text'>My partner and I tended to avoid date nites due to all the stress of getting ready and then worrying about when do we have to leave and where is the restaurant.  With the Date Nite App we just need to worry about what to wear!</p>
-              </div>
-            </div>
+            <h1>About this Website</h1>
+            <h2>Team Members</h2>
+            <ul>
+              <li>John Saterfiel</li>
+              <li>Sayan Mukherjee</li>
+              <li>Sravanthi Kanchi</li>
+              <li>Khushali Dave</li>
+            </ul>
+            <h2>Data Integrations</h2>
+            <ul>
+              <li><a target='_blank' href='https://www.uber.com'>Uber&trade;</a></li>
+              <li><a target='_blank' href='https://www.opentable.com'>OpenTable&trade;</a> data via heroku app created by <a target='_blank' href='https://gist.github.com/andrewonj/3531613'>adrewonj</a></li>
+              <li><a target='_blank' href='https://developers.google.com/maps/documentation/javascript/tutorial'>Google&trade; Maps</a></li>
+              <li><a target='_blank' href='https://www.yelp.com'>Yelp&trade;</a></li>
+            </ul>
           </div>
         </div>
         <Footer />
