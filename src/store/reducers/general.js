@@ -1,9 +1,10 @@
-import {SESSION_SET, CODE_SET} from '../constants'
+import {SESSION_SET, CODE_SET, TRIPS_SET} from '../constants'
 import Cookies from '../../utils/cookies'
 
 let initialState = {
   sessionID: '',
-  code: ''
+  code: '',
+  trips: []
 }
 
 const cookieSessionID = Cookies.getCookie('session')
@@ -26,6 +27,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         code: action.code
+      }
+    }
+
+    case TRIPS_SET: {
+      return {
+        ...state,
+        trips: action.trips
       }
     }
 
