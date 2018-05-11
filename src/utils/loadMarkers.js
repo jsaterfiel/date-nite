@@ -1,0 +1,3 @@
+const coordinates = (locDetails) =>{
+  const 
+}
