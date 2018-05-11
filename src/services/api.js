@@ -9,6 +9,8 @@ apiInstance.interceptors.request.use((config) => {
 })
 
 const API = {
+  saveDate: async (locID, pickupLng, pickupLat, startTime) => {
+  },
   signUp: async accessCode => {
     let result
     try {

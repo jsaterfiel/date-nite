@@ -13,4 +13,4 @@ RUN npm install -g nodemon
 
 EXPOSE 3000
 
-CMD ["yarn", "watch-api"]
+CMD ["yarn", "watch-scheduler"]

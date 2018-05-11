@@ -19,6 +19,7 @@ uberInstance.interceptors.request.use((reqConfig) => {
 const API = {
   requestPickup: async (user, loc, trip) => {
     // do uber pickup
+    console.log(user, loc, trip)
   },
   getEstimate: async (startLng, startLat, endLng, endLat, sessionID) => {
     let result = null
