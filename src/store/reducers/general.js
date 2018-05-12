@@ -10,7 +10,8 @@ let initialState = {
   mapCenter: {lng: -73.985428, lat: 40.748982},
   location: null, // location object from opentable api locations call to our api
   pickupAddress: null, // {lng:, lat:} when set
-  estimatedTrip: null
+  estimatedTrip: null,
+  addressLocation: null
 }
 
 const cookieSessionID = Cookies.getCookie('session')
@@ -53,7 +54,8 @@ export default (state = initialState, action) => {
     case TRIP_ESTIMATE: {
       return {
         ...state,
-        estimatedTrip: action.estimatedTrip
+        estimatedTrip: action.estimatedTrip,
+        addressLocation: action.addressLocation
       }
     }
 
@@ -63,6 +65,7 @@ export default (state = initialState, action) => {
         locations: [],
         estimatedTrip: null,
         pickupAddress: null,
+        addressLocation: null,
         location: null,
         mapCenter: {lng: -73.985428, lat: 40.748982}
       }

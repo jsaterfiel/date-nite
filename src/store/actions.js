@@ -121,15 +121,14 @@ export const logout = session => {
 export const estimateTrip = (session, address, location) => {
   return async dispatch => {
     try {
-      console.log('loc', location)
       const addr = await GoogleService.geocode(address)
       const duration = await ApiService.getDuration(addr.lng, addr.lat, location.location.coordinates[0], location.location.coordinates[1])
-      console.log(duration)
       const result = await ApiService.estimateTrip(session, addr.lng, addr.lat, location._id)
       result.totalTime = duration.value + result.pickupTime + 250 // trip time + uber pick up time + 5 min padding
       dispatch({
         type: TRIP_ESTIMATE,
-        estimatedTrip: result
+        estimatedTrip: result,
+        addressLocation: addr
       })
     } catch (e) {
       console.log('error', e)
@@ -142,5 +141,16 @@ export const clearCreateDate = () => {
     dispatch({
       type: CLEAR_CREATE_DATE
     })
+  }
+}
+
+export const saveDate = (session, locID, pickupAddress, dateTime, people) => {
+  return async dispatch => {
+    try {
+      console.log('address', pickupAddress)
+      await ApiService.saveTrip(session, locID, pickupAddress.lng, pickupAddress.lat, dateTime, people)
+    } catch (e) {
+      console.log('error', e)
+    }
   }
 }

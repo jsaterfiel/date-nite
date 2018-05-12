@@ -6,7 +6,7 @@ import Footer from '../components/Footer'
 import SearchLocation from '../components/SearchLocation'
 import GoogleMapContainer from '../components/GoogleMapsContainer'
 import { setDateAndCount } from '../store/actions/action_date_count'
-import { estimateTrip, pickupAddress } from '../store/actions'
+import { estimateTrip, pickupAddress, saveDate, clearCreateDate } from '../store/actions'
 import DatePicker from 'react-datepicker'
 import Moment from 'moment'
 
@@ -25,6 +25,7 @@ class CreateDate extends Component {
 
     this.onEstimateTrip = this.onEstimateTrip.bind(this)
     this.onPickupAddress = this.onPickupAddress.bind(this)
+    this.onSaveDate = this.onSaveDate.bind(this)
   }
 
   componentDidMount = async props => {
@@ -50,6 +51,11 @@ class CreateDate extends Component {
 
   onEstimateTrip = () => {
     this.props.estimateTrip(this.props.general.sessionID, this.props.general.pickupAddress, this.props.general.location)
+  }
+
+  onSaveDate = () => {
+    // session, locID, pickupAddress, dateTime, people
+    this.props.saveDate(this.props.general.sessionID, this.props.general.location._id, this.props.general.addressLocation, this.props.dateAndCount.dateTime, this.props.dateAndCount.count)
   }
 
   render () {
@@ -111,7 +117,7 @@ class CreateDate extends Component {
                   <div><img alt='Uber car logo' src={this.props.general.estimatedTrip.productImage} /> {this.props.general.estimatedTrip.productName}</div>
                   <div><strong>Estimated Price:</strong> {this.props.general.estimatedTrip.estimate}</div>
                   <div><strong>Estimated travel time:</strong> {Math.floor(this.props.general.estimatedTrip.totalTime / 60)} minutes</div>
-                  <button className='btn btn-primary'>Book It</button>
+                  <button className='btn btn-primary' onClick={this.onSaveDate}>Book It</button>
                 </div>
               }
             </div>
@@ -144,6 +150,11 @@ const mapDispatchToProps = dispatch => {
     },
     pickupAddress: (address) => {
       dispatch(pickupAddress(address))
+    },
+    saveDate: (session, locID, pickupAddress, dateTime, people) => {
+      dispatch(saveDate(session, locID, pickupAddress, dateTime.toDate().getTime(), people))
+      dispatch(clearCreateDate())
+      dispatch(push('/home'))
     }
   }
 }
