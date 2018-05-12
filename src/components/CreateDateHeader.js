@@ -32,7 +32,7 @@ class CreateDateHeader extends Component {
       <div className='create-date-header'>
         <div className='create-date-nav navbar navbar-dark bg-dark'>
           <div className='container'>
-            <h1 class='text-light'>Create Date</h1>
+            <h1 className='text-light'>Create Date</h1>
             <Link to='/home' className='nav-item nav-link text-light text-underline'><h2><u>Home</u></h2></Link>
           </div>
           <div className='input-group mb-3 count-container'>

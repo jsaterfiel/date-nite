@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import SearchLocation from '../components/SearchLocation'
 import GoogleMapContainer from '../components/GoogleMapsContainer'
 import { setDateAndCount } from '../store/actions/action_date_count'
+import { estimateTrip, pickupAddress } from '../store/actions'
 import DatePicker from 'react-datepicker'
 import Moment from 'moment'
 
@@ -13,10 +14,17 @@ import 'react-datepicker/dist/react-datepicker.css'
 import '../styles/create_date_header.css'
 
 class CreateDate extends Component {
-  state = {
-    showGoogle: false,
-    currentDate: Moment(),
-    selectedDate: null
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      showGoogle: false,
+      currentDate: Moment(),
+      selectedDate: null
+    }
+
+    this.onEstimateTrip = this.onEstimateTrip.bind(this)
+    this.onPickupAddress = this.onPickupAddress.bind(this)
   }
 
   componentDidMount = async props => {
@@ -34,6 +42,14 @@ class CreateDate extends Component {
   onSelectDateChange = (date) => {
     const currentCount = this.props.dateAndCount.count
     this.props.onDateAndCountChange({count: currentCount, dateTime: date})
+  }
+
+  onPickupAddress = (evt) => {
+    this.props.pickupAddress(evt.target.value)
+  }
+
+  onEstimateTrip = () => {
+    this.props.estimateTrip(this.props.general.sessionID, this.props.general.pickupAddress, this.props.general.location)
   }
 
   render () {
@@ -74,27 +90,33 @@ class CreateDate extends Component {
             </div>
           </div>
         }
-        {this.props.general.reservationDate > 0 &&
+        {this.props.dateAndCount.dateTime > 0 &&
+        <div>
           <div className='row'>
-            <div className='col'>
+            <div className='col-8'>
               <h2>Schedule Ride</h2>
               <div className='form-group'>
                 <label htmlFor='pickLocation'>Pickup Location</label>
-                <input type='text' className='form-control' id='pickLocation' aria-describedby='pickupLocation' placeholder='Enter pickup location like 1600 Pennsylvania ave, Washington, DC' /> <button className='btn btn-primary'>Estimate Trip</button>
+                <input type='text' className='form-control' id='pickLocation' aria-describedby='pickupLocation' placeholder='Enter pickup location like 1600 Pennsylvania ave, Washington, DC' onChange={this.onPickupAddress} />
               </div>
-              {this.props.general.pickupAddress !== null &&
-                <div>
-                  <ul>
-                    <li>Uber Car Service:</li>
-                    <li><input type='radio' disabled='disabled' checked='checked' />icon UberX</li>
-                    <li>Estimated Price: $40-80</li>
-                    <li>Estimated travel time (google travel time + uber pickup time + 5 min)</li>
-                  </ul>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col'>
+              <button className='btn btn-primary' onClick={this.onEstimateTrip}>Estimate Trip</button>
+              {this.props.general.estimatedTrip !== null &&
+                <div className='pt-2'>
+                  {/* {"productID":"bbec56dc-1c72-44ea-ba64-fe51bf392c09","productImage":"http://d1a3f4spazzrp4.cloudfront.net/car-types/mono/mono-uberx.png","productName":"uberX","pickupTime":120,"estimate":"$7-9"} */}
+                  <h3>Uber&trade; Car Service</h3>
+                  <div><img alt='Uber car logo' src={this.props.general.estimatedTrip.productImage} /> {this.props.general.estimatedTrip.productName}</div>
+                  <div><strong>Estimated Price:</strong> {this.props.general.estimatedTrip.estimate}</div>
+                  <div><strong>Estimated travel time:</strong> {Math.floor(this.props.general.estimatedTrip.totalTime / 60)} minutes</div>
                   <button className='btn btn-primary'>Book It</button>
                 </div>
               }
             </div>
           </div>
+        </div>
         }
         <Footer />
       </div>
@@ -116,6 +138,12 @@ const mapDispatchToProps = dispatch => {
     },
     onDateAndCountChange: (obj) => {
       dispatch(setDateAndCount(obj))
+    },
+    estimateTrip: (session, address, location) => {
+      dispatch(estimateTrip(session, address, location))
+    },
+    pickupAddress: (address) => {
+      dispatch(pickupAddress(address))
     }
   }
 }

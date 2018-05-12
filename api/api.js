@@ -4,6 +4,7 @@ const uberService = require('./services/uber')
 const Yelp = require('./services/yelp_api')
 const locService = require('./services/locations')
 const tripsService = require('./services/trips')
+const googleService = require('./services/google-map-api')
 
 const app = express()
 
@@ -180,20 +181,36 @@ app.get('/api/uber/estimate', async (req, res) => {
   const sessionID = req.query.session
   const startLng = req.query.startLng
   const startLat = req.query.startLat
-  const endLng = req.query.endLng
-  const endLat = req.query.endLat
-  if (sessionID === undefined || startLng === undefined || startLat === undefined || endLng === undefined || endLat === undefined) {
+  const locID = req.query.locID
+  if (sessionID === undefined || startLng === undefined || startLat === undefined || locID === undefined) {
     res.status(500)
     res.send(JSON.stringify({ error: 'Missing parameter.  Parameters are: session, startLng, startLat, endLng, endLat' }))
     return
   }
   res.setHeader('Content-Type', 'application/json')
   try {
-    const result = await uberService.getEstimate(startLng, startLat, endLng, endLat, sessionID)
+    const loc = await locService.getLocation(locID)
+    const result = await uberService.getEstimate(startLng, startLat, loc.location.coordinates[0], loc.location.coordinates[1], sessionID)
     res.send(JSON.stringify(result))
   } catch (e) {
     res.status(500)
     res.send(JSON.stringify({error: e.message}))
+  }
+})
+
+// google to get duration of trip
+app.get('/api/maps/duration', async (req, res) => {
+  const startLng = req.query.startLng
+  const startLat = req.query.startLat
+  const endLng = req.query.endLng
+  const endLat = req.query.endLat
+  try {
+    const result = await googleService.getDuration(startLng, startLat, endLng, endLat)
+    res.status(200).send(JSON.stringify(result))
+  } catch (error) {
+    console.log('ERROR api/maps/duration', error)
+    res.status(500)
+    res.send(JSON.stringify({ error: 'Unable to process the request to google' }))
   }
 })
 

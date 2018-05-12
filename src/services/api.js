@@ -86,7 +86,38 @@ const API = {
       })
       return response.data
     } catch (e) {
-      console.log('api getBusinessInfo', e)
+      console.log('action getBusinessInfo', e)
+    }
+  },
+  estimateTrip: async (session, startLng, startLat, locID) => {
+    try {
+      const response = await apiInstance.get('api/uber/estimate', {
+        params: {
+          session,
+          startLng,
+          startLat,
+          locID
+        }
+      })
+      return response.data
+    } catch (e) {
+      console.log('action estimateTrip', e)
+    }
+  },
+  getDuration: async (startLng, startLat, endLng, endLat) => {
+    try {
+      const response = await apiInstance.get('api/maps/duration', {
+        params: {
+          startLng,
+          startLat,
+          endLng,
+          endLat
+        }
+      })
+      console.log('duration', response.data)
+      return response.data
+    } catch (e) {
+      console.log('action getDuration', e)
     }
   }
 }

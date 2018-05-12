@@ -1,4 +1,4 @@
-import {SESSION_SET, CODE_SET, TRIPS_SET, LOCATIONS_SET, LOCATION_SEARCH, LOCATION_SET, PICKUP_ADDRESS, RESERVATION_DATE} from '../constants'
+import {SESSION_SET, CODE_SET, TRIPS_SET, LOCATIONS_SET, LOCATION_SEARCH, LOCATION_SET, PICKUP_ADDRESS, TRIP_ESTIMATE, CLEAR_CREATE_DATE} from '../constants'
 import Cookies from '../../utils/cookies'
 
 let initialState = {
@@ -9,8 +9,8 @@ let initialState = {
   locations: [],
   mapCenter: {lng: -73.985428, lat: 40.748982},
   location: null, // location object from opentable api locations call to our api
-  reservationDate: 0,
-  pickupAddress: null // {lng:, lat:} when set
+  pickupAddress: null, // {lng:, lat:} when set
+  estimatedTrip: null
 }
 
 const cookieSessionID = Cookies.getCookie('session')
@@ -50,10 +50,21 @@ export default (state = initialState, action) => {
       }
     }
 
-    case RESERVATION_DATE: {
+    case TRIP_ESTIMATE: {
       return {
         ...state,
-        reservationDate: action.reservationDate
+        estimatedTrip: action.estimatedTrip
+      }
+    }
+
+    case CLEAR_CREATE_DATE: {
+      return {
+        ...state,
+        locations: [],
+        estimatedTrip: null,
+        pickupAddress: null,
+        location: null,
+        mapCenter: {lng: -73.985428, lat: 40.748982}
       }
     }
 

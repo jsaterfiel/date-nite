@@ -1,4 +1,4 @@
-import { SESSION_SET, CODE_SET, TRIPS_SET, LOCATIONS_SET, LOCATION_SEARCH, LOCATION_SET, RESERVATION_DATE, PICKUP_ADDRESS } from './constants'
+import { SESSION_SET, CODE_SET, TRIPS_SET, LOCATIONS_SET, LOCATION_SEARCH, LOCATION_SET, CLEAR_CREATE_DATE, PICKUP_ADDRESS, TRIP_ESTIMATE } from './constants'
 import Cookies from '../utils/cookies'
 import ApiService from '../services/api'
 import GoogleService from '../services/google'
@@ -27,15 +27,6 @@ export const locationSet = location => {
   }
 }
 
-export const reservationDate = reservationDate => {
-  return dispatch => {
-    dispatch({
-      type: RESERVATION_DATE,
-      reservationDate
-    })
-  }
-}
-
 export const pickupAddress = pickupAddress => {
   return dispatch => {
     dispatch({
@@ -57,7 +48,6 @@ export const codeSet = code => {
 export const locationSearch = term => {
   return dispatch => {
     GoogleService.geocode(term).then(result => {
-      console.log(result)
       if (result) {
         ApiService.searchLocations(result.lng, result.lat, 10000, 3).then(locations => {
           dispatch({
@@ -121,10 +111,36 @@ export const logout = session => {
     try {
       await ApiService.logout(session)
       dispatch(sessionSet({ sessionID: '' }))
-      console.log('hi')
       dispatch(push('/'))
     } catch (e) {
       console.log('error', e.message)
     }
+  }
+}
+
+export const estimateTrip = (session, address, location) => {
+  return async dispatch => {
+    try {
+      console.log('loc', location)
+      const addr = await GoogleService.geocode(address)
+      const duration = await ApiService.getDuration(addr.lng, addr.lat, location.location.coordinates[0], location.location.coordinates[1])
+      console.log(duration)
+      const result = await ApiService.estimateTrip(session, addr.lng, addr.lat, location._id)
+      result.totalTime = duration.value + result.pickupTime + 250 // trip time + uber pick up time + 5 min padding
+      dispatch({
+        type: TRIP_ESTIMATE,
+        estimatedTrip: result
+      })
+    } catch (e) {
+      console.log('error', e)
+    }
+  }
+}
+
+export const clearCreateDate = () => {
+  return dispatch => {
+    dispatch({
+      type: CLEAR_CREATE_DATE
+    })
   }
 }
