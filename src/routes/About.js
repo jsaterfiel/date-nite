@@ -11,8 +11,8 @@ class Welcome extends Component {
         <Massive />
         <div className='row'>
           <div className='col'>
-            <h1>DateNite is a service aggregator for your one-stop date night creation with Google maps.</h1>
-            <p>
+            <h1 className='text-center'>DateNite is a service aggregator for your one-stop date night creation with Google maps.</h1>
+            <p className='lead'>
               This web app will combine information from Opentable, Google maps (parking locations,
               map, directions/travel time), and schedule a ride (Uber/Lyft) for the estimated travel
               time so you'll be able to arrive on time for the reservation all in one spot. App can also
