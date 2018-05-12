@@ -1,3 +1,0 @@
-const coordinates = (locDetails) =>{
-  const 
-}
