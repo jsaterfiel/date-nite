@@ -13,8 +13,18 @@ a { color: #e70000; }
   border-color: var(--secondary) !important;
   opacity: 1 !important;
 }
-.btn-primary {
+/* .btn-primary {
   color: #fff;
   background-color: var(--primary) !important;
   border-color: var(--primary) !important;
+} */
+/* redefine bootstrap primary button for accessibility */
+.btn-primary {
+  border-color: #008295 !important;
+  background-color: #008295 !important;
+  color: #ffffff !important;
+}
+.btn-primary:hover {
+  border-color: #17a2b8 !important;
+  background-color: #17a2b8 !important;
 }
