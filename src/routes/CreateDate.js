@@ -20,7 +20,6 @@ class CreateDate extends Component {
   }
 
   componentDidMount = async props => {
-    console.log(this.props.sessionID)
     if (this.props.sessionID === 'undefined' || this.props.sessionID === '') {
       this.props.goToSignUp()
     }
