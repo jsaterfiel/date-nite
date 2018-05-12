@@ -12,7 +12,7 @@ class Home extends Component {
     this.onCancel = this.onCancel.bind(this)
   }
   componentDidMount = async props => {
-    if (this.props.sessionID === '') {
+    if (this.props.sessionID === 'undefined' || this.props.sessionID === '') {
       this.props.goToSignUp()
       return
     }
