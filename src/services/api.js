@@ -78,6 +78,8 @@ const API = {
       response = await apiInstance.get('api/yelp/businesses/match', {
         params: info
       })
+      if (response.data.businesses.length === 0) return null
+
       const businessId = response.data.businesses[0].id
       response = await apiInstance.get(`api/yelp/businesses/${businessId}`, {
         params: info

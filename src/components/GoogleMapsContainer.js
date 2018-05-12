@@ -13,10 +13,14 @@ class GoogleMapsContainer extends Component {
 
   render () {
     let coords = []
-    const picker = (evt) => {
-      this.locationSet(evt.target.dataset.id)
+    let locsLookup = []
+    let infoWindow = null
+    let onClick = (evt) => {
+      console.log(evt.target.dataset.id)
+      this.props.locationSet(locsLookup[evt.target.dataset.id])
     }
     for (let loc of this.props.locations) {
+      locsLookup[loc._id] = loc
       coords.push({
         title: loc.name,
         position: {
@@ -33,7 +37,7 @@ class GoogleMapsContainer extends Component {
               city: loc.city,
               state: loc.state
             })
-            if (biz === undefined) {
+            if (biz === null) {
               biz = {
                 url: loc.reserve_url,
                 rating: '?',
@@ -43,11 +47,13 @@ class GoogleMapsContainer extends Component {
             if (biz.price === undefined) {
               biz.price = '$$'
             }
-
-            const infoWindow = new googleMaps.InfoWindow({
-              content:
-            `<div style='width:200px'><h1 class='h6'><a target='_blank' rel='noopener noreferrer' href='${biz.url}'>${loc.name}</a></h1><p><b>price:</b> ${biz.price}<br><b>ratings:</b> ${biz.rating}/5&nbsp;&nbsp;<b>review:</b> ${biz.review_count}<br/></p><img src='${loc.image_url}'><p style='padding-top:10px'><button class='btn btn-primary' onClick='picker' data-id='${loc._id}'>Pick Restaurant</button></p></div>`
-            })
+            if (infoWindow === null) {
+              infoWindow = new googleMaps.InfoWindow()
+              infoWindow.addListener('domready', () => {
+                document.getElementById('pick-location').addEventListener('click', onClick.bind(this))
+              })
+            }
+            infoWindow.setContent(`<div style='width:200px'><h1 class='h6'><a target='_blank' rel='noopener noreferrer' href='${biz.url}'>${loc.name}</a></h1><p><b>price:</b> ${biz.price}<br><b>ratings:</b> ${biz.rating}/5&nbsp;&nbsp;<b>review:</b> ${biz.review_count}<br/></p><img src='${loc.image_url}'><p style='padding-top:10px'><button class='btn btn-primary' id='pick-location' data-id='${loc._id}'>Pick Restaurant</button></p></div>`)
             infoWindow.open(map, marker)
           })
 
@@ -98,8 +104,8 @@ const mapDispatchToProps = dispatch => {
     searchLocations: (lng, lat, radius, price) => {
       dispatch(searchLocations(lng, lat, radius, price))
     },
-    locationSet: (locID) => {
-      dispatch(locationSet(locID))
+    locationSet: (location) => {
+      dispatch(locationSet(location))
     }
   }
 }

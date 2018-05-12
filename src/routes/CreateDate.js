@@ -59,8 +59,8 @@ class CreateDate extends Component {
             <div className='col'>
               <h2>Selected Restaurant</h2>
               <div className='alert alert-danger' role='alert'><strong>Alert</strong> Due to current limitations in the site's implementation with OpenTable&trade; we are unable to book restaurants for you currently.  We are working with OpenTable&trade; to resolve this issue as quickly as possible.  Until then, please follow the booking link for the restaurant to OpenTable's &trade; site and tell us at what date and time your reservation is at.</div>
-              <p className='h3'>RESTAURANT NAME</p>
-              <a href='' target='_blank' rel='noopener noreferrer' className='btn btn-primary'>Book Your Reservation on OpenTable&trade;</a>
+              <p className='h3'>{this.props.general.location.name}</p>
+              <a href={this.props.general.location.reserve_url} target='_blank' rel='noopener noreferrer' className='btn btn-primary'>Book Your Reservation on OpenTable&trade;</a>
               <div className='form-group pt-3 pb-3'>
                 <DatePicker className='custom-datepicker' id='dateWhen'
                   minDate={this.state.currentDate} selected={this.props.dateAndCount.dateTime}
