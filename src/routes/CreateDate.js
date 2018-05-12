@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 import CreateDateHeader from '../components/CreateDateHeader'
 import Footer from '../components/Footer'
 import SearchLocation from '../components/SearchLocation'
@@ -15,12 +16,11 @@ class CreateDate extends Component {
     showGoogle: false
   }
 
-  componentDidMount () {
-    console.log('component mounted')
-  }
-
-  componentWillReceiveProps (newProps) {
-    console.log('will receive props')
+  componentDidMount = async props => {
+    console.log(this.props.sessionID)
+    if (this.props.sessionID === 'undefined' || this.props.sessionID === '') {
+      this.props.goToSignUp()
+    }
   }
 
   handleSearch (e) {
@@ -90,4 +90,13 @@ class CreateDate extends Component {
 const mapStateToProps = state => {
   return state.general
 }
-export default connect(mapStateToProps)(CreateDate)
+
+const mapDispatchToProps = dispatch => {
+  return {
+    goToSignUp: () => {
+      dispatch(push('/sign-up'))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateDate)
