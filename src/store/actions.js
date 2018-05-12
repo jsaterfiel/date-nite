@@ -1,4 +1,4 @@
-import { SESSION_SET, CODE_SET, TRIPS_SET, LOCATIONS_SET, LOCATION_SEARCH } from './constants'
+import { SESSION_SET, CODE_SET, TRIPS_SET, LOCATIONS_SET, LOCATION_SEARCH, LOCATION_SET, RESERVATION_DATE, PICKUP_ADDRESS } from './constants'
 import Cookies from '../utils/cookies'
 import ApiService from '../services/api'
 import GoogleService from '../services/google'
@@ -14,6 +14,33 @@ export const sessionSet = data => {
     dispatch({
       type: SESSION_SET,
       sessionID: data.sessionID
+    })
+  }
+}
+
+export const locationSet = location => {
+  return dispatch => {
+    dispatch({
+      type: LOCATION_SET,
+      location
+    })
+  }
+}
+
+export const reservationDate = reservationDate => {
+  return dispatch => {
+    dispatch({
+      type: RESERVATION_DATE,
+      reservationDate
+    })
+  }
+}
+
+export const pickupAddress = pickupAddress => {
+  return dispatch => {
+    dispatch({
+      type: PICKUP_ADDRESS,
+      pickupAddress
     })
   }
 }

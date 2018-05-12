@@ -1,7 +1,7 @@
 import Config from '../config'
 import GoogleMapLoader from './GoogleMapsLoader'
 import GoogleMap from './GoogleMap'
-import { searchLocations } from '../store/actions'
+import { searchLocations, locationSet } from '../store/actions'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import API from '../services/api'
@@ -13,6 +13,9 @@ class GoogleMapsContainer extends Component {
 
   render () {
     let coords = []
+    const picker = (evt) => {
+      this.locationSet(evt.target.dataset.id)
+    }
     for (let loc of this.props.locations) {
       coords.push({
         title: loc.name,
@@ -30,7 +33,6 @@ class GoogleMapsContainer extends Component {
               city: loc.city,
               state: loc.state
             })
-            console.log(biz)
             if (biz === undefined) {
               biz = {
                 url: loc.reserve_url,
@@ -41,9 +43,10 @@ class GoogleMapsContainer extends Component {
             if (biz.price === undefined) {
               biz.price = '$$'
             }
+
             const infoWindow = new googleMaps.InfoWindow({
               content:
-            `<div style='width:200px'><h1 class='h6'><a target='_blank' rel='noopener noreferrer' href='${biz.url}'>${loc.name}</a></h1><p><b>price:</b> ${biz.price}<br><b>ratings:</b> ${biz.rating}/5&nbsp;&nbsp;<b>review:</b> ${biz.review_count}<br/></p><img src='${loc.image_url}'><p style='padding-top:10px'><button class='btn btn-primary'>Pick Restaurant</button></p></div>`
+            `<div style='width:200px'><h1 class='h6'><a target='_blank' rel='noopener noreferrer' href='${biz.url}'>${loc.name}</a></h1><p><b>price:</b> ${biz.price}<br><b>ratings:</b> ${biz.rating}/5&nbsp;&nbsp;<b>review:</b> ${biz.review_count}<br/></p><img src='${loc.image_url}'><p style='padding-top:10px'><button class='btn btn-primary' onClick='picker' data-id='${loc._id}'>Pick Restaurant</button></p></div>`
             })
             infoWindow.open(map, marker)
           })
@@ -94,6 +97,9 @@ const mapDispatchToProps = dispatch => {
   return {
     searchLocations: (lng, lat, radius, price) => {
       dispatch(searchLocations(lng, lat, radius, price))
+    },
+    locationSet: (locID) => {
+      dispatch(locationSet(locID))
     }
   }
 }
